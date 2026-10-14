@@ -10,6 +10,7 @@ import { Bath, BedDouble, Bookmark, Search, SlidersHorizontal, Users } from 'luc
 import type { StudioProps, UnitProps } from '../shared/types';
 import { HorizontalLogo, theme } from '../shared/brand';
 import { BrandBackground } from '../shared/background';
+import { AppStoreBadge, GooglePlayBadge } from '../shared/storeBadges';
 
 export const S2_FRAMES = 300; // 10s
 
@@ -20,7 +21,7 @@ const reveal = (f: number, start: number, dur = 20) =>
 
 /* ── phone geometry ── */
 const PH_W = 560;
-const PH_H = 1150;
+const PH_H = 1080;
 const PH_X = (1080 - PH_W) / 2;
 const PH_Y = 470;
 const BEZEL = 16;
@@ -230,19 +231,14 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
         </div>
       </div>
 
-      {/* CTA chip over the phone bottom */}
-      <div style={{ position: 'absolute', top: 1474, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
-        <div style={{
-          height: 96, padding: '0 16px 0 40px', borderRadius: 999, background: t.ink, color: '#fff', display: 'flex', alignItems: 'center', gap: 20,
-          fontSize: 34, fontWeight: 600, boxShadow: '0 18px 44px rgba(14,14,16,0.35)', paddingLeft: 14,
-          transform: `translateY(${(1 - ctaIn) * 60}px) scale(${0.9 + 0.1 * ctaIn})`, opacity: Math.min(1, ctaIn * 1.3),
-        }}>
-          <Img src={staticFile('brand/3d/app-icon.png')} style={{ width: 70, height: 70, borderRadius: 18 }} />
-          Book on homestastay.com
-          <div style={{ width: 64, height: 64, borderRadius: 999, background: t.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `translateX(${Math.sin(f / 7) * 5}px)` }}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-          </div>
-        </div>
+      {/* app row under the phone: app icon + store badges */}
+      <div style={{
+        position: 'absolute', top: PH_Y + PH_H + 34, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18,
+        transform: `translateY(${(1 - ctaIn) * 50}px)`, opacity: Math.min(1, ctaIn * 1.3),
+      }}>
+        <Img src={staticFile('brand/3d/app-icon.png')} style={{ width: 96, height: 96, filter: 'drop-shadow(0 10px 16px rgba(14,14,16,0.18))' }} />
+        <AppStoreBadge height={84} />
+        <GooglePlayBadge height={84} />
       </div>
     </AbsoluteFill>
   );
