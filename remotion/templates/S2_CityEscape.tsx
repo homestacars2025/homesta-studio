@@ -134,7 +134,7 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
 
   return (
     <AbsoluteFill style={{ fontFamily: t.sans, color: t.ink, opacity: out }}>
-      <BrandBackground />
+      <BrandBackground opacity={0} />
 
       {/* dashed travel path behind everything */}
       <svg width={1080} height={1920} style={{ position: 'absolute', inset: 0 }}>
@@ -231,14 +231,21 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
         </div>
       </div>
 
-      {/* app row under the phone: app icon + store badges */}
+      {/* app row under the phone: big app icon + "Download the Homesta app" over the store badges */}
       <div style={{
-        position: 'absolute', top: PH_Y + PH_H + 34, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18,
+        position: 'absolute', top: PH_Y + PH_H + 30, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 22,
         transform: `translateY(${(1 - ctaIn) * 50}px)`, opacity: Math.min(1, ctaIn * 1.3),
       }}>
-        <Img src={staticFile('brand/3d/app-icon.png')} style={{ width: 96, height: 96, filter: 'drop-shadow(0 10px 16px rgba(14,14,16,0.18))' }} />
-        <AppStoreBadge height={84} />
-        <GooglePlayBadge height={84} />
+        <Img src={staticFile('brand/3d/app-icon.png')} style={{ width: 132, height: 132, filter: 'drop-shadow(0 12px 18px rgba(14,14,16,0.2))' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ fontSize: 30, fontWeight: 600, color: t.ink, letterSpacing: -0.3 }}>
+            Download the <span style={{ color: t.primary }}>Homesta</span> app
+          </div>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <AppStoreBadge height={62} />
+            <GooglePlayBadge height={62} />
+          </div>
+        </div>
       </div>
     </AbsoluteFill>
   );
