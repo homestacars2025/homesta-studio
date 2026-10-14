@@ -1,0 +1,211 @@
+{
+ "brand": {
+  "key": "stay",
+  "name": "Homesta Stay",
+  "version": 1,
+  "site": "homestastay.com",
+  "handle": "@homestastay",
+  "default_cta": "Explore stays",
+  "colors": {
+   "primary": "#E52851",
+   "secondary": "#0E0E10",
+   "tertiary": "#FAFAF7",
+   "mute": "#8C8881",
+   "rule": "#E2DED4",
+   "red_ink": "#8C0E2A",
+   "paper_warm": "#F2EEE6",
+   "white": "#FFFFFF"
+  },
+  "fonts": {
+   "primary": {
+    "family": "Geist Sans"
+   },
+   "secondary": {
+    "family": "Inter"
+   },
+   "display": {
+    "family": "Playfair Display",
+    "style": "italic"
+   }
+  },
+  "logos": {
+   "icon": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/icon.png",
+   "wordmark": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/wordmark.png",
+   "logo_stacked": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-stacked.png",
+   "wordmark_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/wordmark-light.png",
+   "logo_horizontal": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-horizontal.png",
+   "logo_stacked_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-stacked-light.png",
+   "logo_horizontal_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-horizontal-light.png"
+  },
+  "icon_svg": {
+   "path": "M341.5 752 V525 A198 198 0 0 1 737.5 525 V752",
+   "viewbox": "307 292 466 496",
+   "stroke": 69.5
+  },
+  "radius": {
+   "card": 34,
+   "chip": 30,
+   "photo": 24,
+   "button": 999
+  }
+ },
+ "logoReady": false,
+ "template": "S2",
+ "render_id": "sample",
+ "params": {},
+ "cta": "Explore stays",
+ "city": {
+  "id": "f0c33c4a-63cf-4da0-a3e2-a9f8948e15ee",
+  "name": "Antalya",
+  "image": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/geo-media/cities/f0c33c4a-63cf-4da0-a3e2-a9f8948e15ee-1779867444648.png"
+ },
+ "units": [
+  {
+   "id": "0f75bd76-d05c-48dd-bd74-93c745ec76c5",
+   "title": "4+2 FULL SEA VIEW FOR 8 GUESTS",
+   "name": "4+2 FULL SEA VIEW FOR 8 GUESTS",
+   "type": "Villa",
+   "city": "Antalya",
+   "district": null,
+   "price_from_usd": 435.68,
+   "specs": {
+    "guests": 8,
+    "bedrooms": 5,
+    "baths": 5
+   },
+   "amenities": [
+    "pool",
+    "wifi"
+   ],
+   "photos": [
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/0f75bd76-d05c-48dd-bd74-93c745ec76c5/6e7e59bc-2077-4af0-9791-9048c44c41d8.jpg",
+     "cover": true
+    }
+   ]
+  },
+  {
+   "id": "95597d30-bd01-4afc-906b-80543268a4dd",
+   "title": "Villa Fuşya 4+2 Private Pool Sea View Villa",
+   "name": "Villa Fuşya 4+2 Private Pool Sea View Villa",
+   "type": "Villa",
+   "city": "Antalya",
+   "district": null,
+   "price_from_usd": 445.76,
+   "specs": {
+    "guests": 9,
+    "bedrooms": 4,
+    "baths": 5
+   },
+   "amenities": [
+    "pool",
+    "wifi"
+   ],
+   "photos": [
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/95597d30-bd01-4afc-906b-80543268a4dd/a52d244c-061e-49f2-8135-651aa5d17b67.webp",
+     "cover": true
+    },
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/95597d30-bd01-4afc-906b-80543268a4dd/b58a12de-8019-43d8-9ef9-3841122abbb0.webp"
+    }
+   ]
+  },
+  {
+   "id": "24519022-af07-4638-b46c-95ec6377050b",
+   "title": "Villa with Private Secluded Pool",
+   "name": "Villa with Private Secluded Pool",
+   "type": "Villa",
+   "city": "Antalya",
+   "district": null,
+   "price_from_usd": 151.2,
+   "specs": {
+    "guests": 5,
+    "bedrooms": 2,
+    "baths": 1
+   },
+   "amenities": [
+    "pool",
+    "wifi"
+   ],
+   "photos": [
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/24519022-af07-4638-b46c-95ec6377050b/d1f20ce6-a666-4e7d-82ce-3badfef51364.webp",
+     "cover": true
+    }
+   ]
+  },
+  {
+   "id": "6de0d7fd-6711-4134-9eb4-c18a4b72d5ac",
+   "title": "4+2 FULL SEA VIEW WITH PRIVATE POOL",
+   "name": "4+2 FULL SEA VIEW WITH PRIVATE POOL",
+   "type": "Villa",
+   "city": "Antalya",
+   "district": null,
+   "price_from_usd": 435.68,
+   "specs": {
+    "guests": 9,
+    "bedrooms": 4,
+    "baths": 5
+   },
+   "amenities": [
+    "pool",
+    "wifi"
+   ],
+   "photos": [
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/6de0d7fd-6711-4134-9eb4-c18a4b72d5ac/89882f37-71bb-4fc0-831d-be7a315747c8.webp",
+     "cover": true
+    }
+   ]
+  },
+  {
+   "id": "f73ecf87-79d9-45bf-976b-645a7d78e8b1",
+   "title": "An Unforgettable Vacation Awaits You in Antalya",
+   "name": "An Unforgettable Vacation Awaits You in Antalya",
+   "type": "Villa",
+   "city": "Antalya",
+   "district": null,
+   "price_from_usd": 837.76,
+   "specs": {
+    "guests": 10,
+    "bedrooms": 5,
+    "baths": 5.5
+   },
+   "amenities": [
+    "pool",
+    "wifi"
+   ],
+   "photos": [
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/f73ecf87-79d9-45bf-976b-645a7d78e8b1/6539300a-4bf2-4592-ac77-198b60675136.webp",
+     "cover": true
+    }
+   ]
+  },
+  {
+   "id": "77489c4d-7b03-41a3-8cf5-082fc8578a66",
+   "title": "4+2 FULL SEA VIEW FOR 8 GUESTS",
+   "name": "4+2 FULL SEA VIEW FOR 8 GUESTS",
+   "type": "Villa",
+   "city": "Antalya",
+   "district": null,
+   "price_from_usd": 435.68,
+   "specs": {
+    "guests": 9,
+    "bedrooms": 4,
+    "baths": 5
+   },
+   "amenities": [
+    "pool",
+    "wifi"
+   ],
+   "photos": [
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/77489c4d-7b03-41a3-8cf5-082fc8578a66/6eb330e2-dec6-4cf1-9d2c-a1d768d105cb.jpg",
+     "cover": true
+    }
+   ]
+  }
+ ]
+}
