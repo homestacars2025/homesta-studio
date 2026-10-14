@@ -3,11 +3,11 @@
  * Target: district. Data: district name + one unit (photos, specs, amenities) + brand.
  */
 import React from 'react';
-import { AbsoluteFill, Easing, Img, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Easing, Img, staticFile, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import type { StudioProps } from '../shared/types';
-import { Arch, StackedLogo, pickAmenities, plural, theme } from '../shared/brand';
+import { StackedLogo, pickAmenities, plural, theme } from '../shared/brand';
 
-export const S3_FRAMES = 480;
+export const S3_FRAMES = 300; // 10s
 
 const easeOut = Easing.bezier(0.16, 1, 0.3, 1);
 const easeInOut = Easing.bezier(0.65, 0, 0.35, 1);
@@ -15,68 +15,57 @@ const reveal = (f: number, start: number, dur = 24) =>
   interpolate(f, [start, start + dur], [0, 1], { easing: easeOut, extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
 /* ── carousel timing ── */
-const CARD_W = 600;
-const CARD_H = 740;
-const HOLD = 54;
-const MOVE = 24;
-const START = 70;
-const carouselPos = (f: number, n: number) => {
-  const t = Math.max(0, f - START);
-  const step = HOLD + MOVE;
-  const k = Math.floor(t / step);
-  const inStep = t - k * step;
-  const frac = inStep < HOLD ? 0 : easeInOut((inStep - HOLD) / MOVE);
-  return (k + frac) % n;
+const CARD_W = 540;
+const CARD_H = 620;
+const START = 32;
+const END_HOLD = 24; // frames the last photo stays before the video ends
+/**
+ * Each photo passes exactly once and the strip never stops or jerks:
+ * position = u - A·sin(2πu)/2π  → speed swings smoothly between slow (on a photo) and fast (between photos).
+ */
+const GLIDE = 0.86; // 0 = constant speed, →1 = longer pause on each photo
+const carouselPos = (f: number, n: number, total: number) => {
+  if (n <= 1) return 0;
+  const step = (total - START - END_HOLD) / (n - 1);
+  const u = Math.min(n - 1, Math.max(0, f - START) / step);
+  return u - (GLIDE * Math.sin(2 * Math.PI * u)) / (2 * Math.PI);
 };
 
-const Background: React.FC<{ f: number; p: StudioProps }> = ({ f, p }) => {
-  const t = theme(p.brand);
-  const arches = [
-    { x: -140, y: 160, s: 520, r: -8, sp: 0.18 },
-    { x: 760, y: 40, s: 420, r: 10, sp: -0.14 },
-    { x: 820, y: 1380, s: 560, r: -12, sp: 0.12 },
-    { x: -200, y: 1500, s: 460, r: 6, sp: -0.16 },
-  ];
-  return (
-    <AbsoluteFill style={{ background: t.paper }}>
-      <AbsoluteFill style={{ background: `radial-gradient(120% 60% at 50% 0%, #FFFFFF 0%, ${t.paper} 55%, ${t.paperWarm} 100%)` }} />
-      {arches.map((a, i) => (
-        <div
-          key={i}
-          style={{
-            position: 'absolute', left: a.x, top: a.y + Math.sin((f + i * 40) / 70) * 14,
-            transform: `rotate(${a.r + f * a.sp * 0.05}deg)`, opacity: 0.035,
-          }}
-        >
-          <Arch b={p.brand} size={a.s} />
-        </div>
-      ))}
-    </AbsoluteFill>
-  );
-};
+/* ── Background: static brand pattern (public/brand/pattern-9x16.png).
+ * The white veil is thicker in the middle and thinner at the edges (eased radial mask),
+ * so the icons almost vanish behind the content and show softly around the frame. */
+export const PATTERN_OPACITY = 0.06; // strength at the very edges
+const PATTERN_MASK =
+  'radial-gradient(ellipse 78% 62% at 50% 50%, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.10) 22%, rgba(0,0,0,0.18) 40%, rgba(0,0,0,0.34) 56%, rgba(0,0,0,0.56) 70%, rgba(0,0,0,0.80) 84%, #000 100%)';
+const Background: React.FC = () => (
+  <AbsoluteFill style={{ background: '#FFFFFF' }}>
+    <Img
+      src={staticFile('brand/pattern-9x16.png')}
+      style={{ width: '100%', height: '100%', opacity: PATTERN_OPACITY, WebkitMaskImage: PATTERN_MASK, maskImage: PATTERN_MASK }}
+    />
+  </AbsoluteFill>
+);
 
 const Carousel: React.FC<{ f: number; photos: string[] }> = ({ f, photos }) => {
   const n = photos.length;
-  const pos = carouselPos(f, n);
+  const pos = carouselPos(f, n, S3_FRAMES);
   return (
-    <div style={{ position: 'absolute', left: 0, right: 0, top: 696, height: CARD_H, perspective: 2200 }}>
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 640, height: CARD_H, perspective: 2200 }}>
       {photos.map((src, i) => {
-        let d = i - pos;
-        if (d > n / 2) d -= n;
-        if (d < -n / 2) d += n;
+        const d = i - pos; // no wrap-around → no photo shows twice
         const ad = Math.abs(d);
         if (ad > 2.2) return null;
         const scale = 1 - 0.2 * Math.min(ad, 1.6);
         const op = interpolate(ad, [0, 1.2, 2.1], [1, 0.92, 0], { extrapolateRight: 'clamp' });
         const dim = interpolate(ad, [0, 1], [0, 0.28], { extrapolateRight: 'clamp' });
-        const e = spring({ frame: f - 34 - Math.round(ad) * 6, fps: 30, config: { damping: 200, mass: 0.9 } });
-        const kb = 1.12 - 0.08 * ((f % 240) / 240);
+        const e = spring({ frame: f - 14 - Math.round(ad) * 4, fps: 30, config: { damping: 200, mass: 0.9 } });
+        const kb = 1.1 - 0.07 * (f / S3_FRAMES); // one continuous slow zoom, never jumps
         return (
           <div
             key={i}
             style={{
               position: 'absolute', left: 540 - CARD_W / 2, top: 0, width: CARD_W, height: CARD_H,
-              transform: `translateX(${d * 440}px) translateY(${(1 - e) * 260}px) scale(${scale}) rotateY(${-d * 6}deg)`,
+              transform: `translateX(${d * 570}px) translateY(${(1 - e) * 260}px) scale(${scale}) rotateY(${-d * 6}deg)`,
               zIndex: Math.round(100 - ad * 10), opacity: op * e, borderRadius: 56, overflow: 'hidden',
               boxShadow: `0 ${40 - ad * 14}px ${90 - ad * 30}px rgba(14,14,16,${0.22 - ad * 0.07})`, background: '#ddd',
             }}
@@ -103,42 +92,42 @@ export const S3_FindYourStayIn: React.FC<StudioProps> = (p) => {
   const cta = / in /i.test(baseCta) ? baseCta : `${baseCta} in ${districtName}`;
   const amen = pickAmenities(u.amenities, 6);
 
-  const logo = reveal(f, 2, 30);
-  const eyebrow = reveal(f, 12, 26);
-  const title = reveal(f, 20, 34);
-  const pill = spring({ frame: f - 40, fps, config: { damping: 14, stiffness: 140 } });
-  const facts = reveal(f, 92, 26);
-  const ctaIn = spring({ frame: f - 120, fps, config: { damping: 16, stiffness: 120 } });
-  const out = interpolate(f, [durationInFrames - 14, durationInFrames], [1, 0], { extrapolateLeft: 'clamp' });
-  const shine = ((f - 140) % 90) / 90;
+  const logo = reveal(f, 0, 18);
+  const eyebrow = reveal(f, 4, 16);
+  const title = reveal(f, 8, 22);
+  const pill = spring({ frame: f - 18, fps, config: { damping: 14, stiffness: 140 } });
+  const facts = reveal(f, 40, 18);
+  const ctaIn = spring({ frame: f - 62, fps, config: { damping: 16, stiffness: 120 } });
+  const out = interpolate(f, [durationInFrames - 10, durationInFrames], [1, 0], { extrapolateLeft: 'clamp' });
+  const shine = ((f - 80) % 70) / 70;
   const arrow = Math.sin(f / 7) * 6;
 
   // long names shrink to fit
-  const titleSize = districtName.length > 11 ? 124 : districtName.length > 8 ? 140 : 156;
+  const titleSize = districtName.length > 11 ? 112 : districtName.length > 8 ? 126 : 140;
 
   return (
     <AbsoluteFill style={{ fontFamily: t.sans, color: t.ink, opacity: out }}>
-      <Background f={f} p={p} />
+      <Background />
 
       {/* logo */}
-      <div style={{ position: 'absolute', top: 104, left: 0, right: 0, display: 'flex', justifyContent: 'center', transform: `translateY(${(1 - logo) * 12}px)` }}>
-        <StackedLogo b={p.brand} width={200} logoReady={p.logoReady} progress={logo} />
+      <div style={{ position: 'absolute', top: 168, left: 0, right: 0, display: 'flex', justifyContent: 'center', transform: `translateY(${(1 - logo) * 12}px)` }}>
+        <StackedLogo b={p.brand} width={160} logoReady={p.logoReady} progress={logo} />
       </div>
 
       {/* title */}
-      <div style={{ position: 'absolute', top: 330, left: 0, right: 0, textAlign: 'center' }}>
-        <div style={{ fontSize: 30, fontWeight: 500, letterSpacing: 9, textTransform: 'uppercase', color: t.mute, opacity: eyebrow, transform: `translateY(${(1 - eyebrow) * 18}px)` }}>
+      <div style={{ position: 'absolute', top: 318, left: 0, right: 0, textAlign: 'center' }}>
+        <div style={{ fontSize: 28, fontWeight: 500, letterSpacing: 9, textTransform: 'uppercase', color: t.mute, opacity: eyebrow, transform: `translateY(${(1 - eyebrow) * 18}px)` }}>
           Find your stay in
         </div>
-        <div style={{ overflow: 'hidden', height: 210, marginTop: 4, paddingTop: 6 }}>
-          <div style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, fontSize: titleSize, lineHeight: '190px', letterSpacing: -2, transform: `translateY(${(1 - title) * 200}px)` }}>
+        <div style={{ overflow: 'hidden', height: 178, marginTop: 2, paddingTop: 4 }}>
+          <div style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, fontSize: titleSize, lineHeight: '168px', letterSpacing: -2, transform: `translateY(${(1 - title) * 200}px)` }}>
             {districtName}
           </div>
         </div>
       </div>
 
       {/* type pill */}
-      <div style={{ position: 'absolute', top: 596, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
+      <div style={{ position: 'absolute', top: 548, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{
           padding: '12px 34px', borderRadius: 999, background: t.primary, color: '#fff', fontSize: 30, fontWeight: 600,
           letterSpacing: 2, textTransform: 'uppercase', transform: `scale(${0.6 + 0.4 * pill})`, opacity: Math.min(1, pill * 1.4),
@@ -151,20 +140,20 @@ export const S3_FindYourStayIn: React.FC<StudioProps> = (p) => {
       <Carousel f={f} photos={photos} />
 
       {/* facts */}
-      <div style={{ position: 'absolute', top: 1474, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 22, fontSize: 30, fontWeight: 500, opacity: facts, transform: `translateY(${(1 - facts) * 16}px)` }}>
+      <div style={{ position: 'absolute', top: 1290, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 22, fontSize: 30, fontWeight: 500, opacity: facts, transform: `translateY(${(1 - facts) * 16}px)` }}>
         {u.specs.guests ? <span>{plural(u.specs.guests, 'guest', 'guests')}</span> : null}
         {u.specs.bedrooms ? <><span style={{ color: t.primary }}>•</span><span>{plural(u.specs.bedrooms, 'bedroom', 'bedrooms')}</span></> : null}
         {u.specs.baths ? <><span style={{ color: t.primary }}>•</span><span>{plural(u.specs.baths, 'bath', 'baths')}</span></> : null}
       </div>
 
       {/* amenities */}
-      <div style={{ position: 'absolute', top: 1536, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 18 }}>
+      <div style={{ position: 'absolute', top: 1346, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 18 }}>
         {amen.map((a, i) => {
-          const s = spring({ frame: f - 100 - i * 4, fps, config: { damping: 13, stiffness: 160 } });
+          const s = spring({ frame: f - 46 - i * 3, fps, config: { damping: 13, stiffness: 160 } });
           const Icon = a.icon;
           return (
             <div key={a.key} style={{
-              width: 136, height: 120, borderRadius: 30, background: '#FFFFFF', border: `2px solid ${t.rule}`,
+              width: 132, height: 112, borderRadius: 28, background: '#FFFFFF', border: `2px solid ${t.rule}`,
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8,
               transform: `translateY(${(1 - s) * 30}px) scale(${0.7 + 0.3 * s})`, opacity: Math.min(1, s * 1.5),
               boxShadow: '0 8px 22px rgba(14,14,16,0.06)',
@@ -177,25 +166,25 @@ export const S3_FindYourStayIn: React.FC<StudioProps> = (p) => {
       </div>
 
       {/* CTA */}
-      <div style={{ position: 'absolute', top: 1704, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
+      <div style={{ position: 'absolute', top: 1484, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
         <div style={{
-          position: 'relative', overflow: 'hidden', height: 112, padding: '0 22px 0 52px', borderRadius: 999, background: t.ink, color: '#fff',
+          position: 'relative', overflow: 'hidden', height: 100, padding: '0 18px 0 46px', borderRadius: 999, background: t.ink, color: '#fff',
           display: 'flex', alignItems: 'center', gap: 22, fontSize: cta.length > 26 ? 34 : 38, fontWeight: 600,
           transform: `translateY(${(1 - ctaIn) * 60}px) scale(${0.9 + 0.1 * ctaIn})`, opacity: Math.min(1, ctaIn * 1.3),
           boxShadow: '0 18px 40px rgba(14,14,16,0.25)',
         }}>
           {cta}
-          <div style={{ width: 68, height: 68, borderRadius: 999, background: t.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `translateX(${arrow}px)` }}>
+          <div style={{ width: 64, height: 64, borderRadius: 999, background: t.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `translateX(${arrow}px)` }}>
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
           </div>
-          {f > 140 && (
+          {f > 80 && (
             <div style={{ position: 'absolute', top: 0, bottom: 0, width: 120, left: `${-20 + shine * 140}%`, background: 'linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.22), rgba(255,255,255,0))', transform: 'skewX(-20deg)' }} />
           )}
         </div>
       </div>
 
       {/* site */}
-      <div style={{ position: 'absolute', top: 1850, left: 0, right: 0, textAlign: 'center', fontSize: 28, fontWeight: 500, color: t.mute, letterSpacing: 1, opacity: reveal(f, 130, 20) }}>
+      <div style={{ position: 'absolute', top: 1608, left: 0, right: 0, textAlign: 'center', fontSize: 28, fontWeight: 500, color: t.mute, letterSpacing: 1, opacity: reveal(f, 70, 16) }}>
         <span style={{ color: t.ink, fontWeight: 600 }}>{t.site.replace(/\.com$/, '')}</span>.com
       </div>
     </AbsoluteFill>

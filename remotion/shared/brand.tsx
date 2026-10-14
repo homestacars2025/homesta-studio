@@ -55,7 +55,7 @@ export const StackedLogo: React.FC<{ b: BrandProps; width: number; logoReady?: b
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width }}>
-      <Arch b={b} size={width * 0.42} progress={progress} />
+      <Arch b={b} size={width * 0.42} progress={progress} color={light ? '#FFFFFF' : undefined} />
       <div
         style={{
           marginTop: width * 0.06,
@@ -96,4 +96,33 @@ export const pickAmenities = (keys: string[] = [], max = 6) =>
 export const plural = (n: number | string | null | undefined, one: string, many: string) => {
   const v = Number(n ?? 0);
   return `${v} ${v === 1 ? one : many}`;
+};
+
+/**
+ * Horizontal logo: arch icon + "homesta" side by side, both the same height
+ * (arch height = height of the "h" from baseline to top).
+ * Uses the official PNG when uploaded (logoReady), else the vector version.
+ */
+export const HorizontalLogo: React.FC<{ b: BrandProps; height: number; logoReady?: boolean; light?: boolean }> = ({
+  b, height, logoReady, light,
+}) => {
+  const src = light ? b.logos.logo_horizontal_light : b.logos.logo_horizontal;
+  if (logoReady && src) return <Img src={src} style={{ height }} />;
+  const svg = b.icon_svg ?? { path: 'M341.5 752 V525 A198 198 0 0 1 737.5 525 V752', viewbox: '307 292 466 496', stroke: 69.5 };
+  const [, , vw, vh] = svg.viewbox.split(' ').map(Number);
+  const fontSize = height / 0.74; // Poppins ascender ≈ 0.74em → "h" is as tall as the arch
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: height * 0.28 }}>
+      <svg width={height * (vw / vh)} height={height} viewBox={svg.viewbox} style={{ display: 'block' }}>
+        <path d={svg.path} fill="none" stroke={light ? '#FFFFFF' : theme(b).primary} strokeWidth={svg.stroke} strokeLinecap="round" />
+      </svg>
+      <div style={{
+        fontFamily: '"Poppins", sans-serif', fontWeight: 500, fontSize, letterSpacing: -0.5,
+        lineHeight: `${height}px`, height, display: 'flex', alignItems: 'flex-end',
+        color: light ? '#FFFFFF' : theme(b).ink,
+      }}>
+        <span style={{ lineHeight: 0.74, display: 'block', transform: `translateY(${fontSize * 0.0}px)` }}>homesta</span>
+      </div>
+    </div>
+  );
 };

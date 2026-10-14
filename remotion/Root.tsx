@@ -1,8 +1,9 @@
 import React from 'react';
-import { Composition } from 'remotion';
+import { Composition, Still } from 'remotion';
 import './shared/fonts';
 import type { StudioProps } from './shared/types';
 import { S3_FindYourStayIn, S3_FRAMES } from './templates/S3_FindYourStayIn';
+import { S7_StayCard } from './templates/S7_StayCard';
 import sample from '../test/sample-s3.json';
 
 /**
@@ -17,6 +18,13 @@ export const Root: React.FC = () => (
       component={S3_FindYourStayIn as React.FC<any>}
       durationInFrames={S3_FRAMES}
       fps={30}
+      width={1080}
+      height={1920}
+      defaultProps={sample as unknown as StudioProps}
+    />
+    <Still
+      id="S7-StayCard"
+      component={S7_StayCard as React.FC<any>}
       width={1080}
       height={1920}
       defaultProps={sample as unknown as StudioProps}
