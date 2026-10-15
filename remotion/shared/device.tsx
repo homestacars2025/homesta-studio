@@ -87,8 +87,6 @@ export const AppIcon: React.FC<{ size: number; primary?: string }> = ({ size, pr
         </defs>
         {/* arch */}
         <path d="M29.5 71 V49 A20.5 20.5 0 0 1 70.5 49 V71" fill="none" stroke={`url(#${id}g)`} strokeWidth="10.5" strokeLinecap="round" filter={`url(#${id}s)`} />
-        {/* specular highlight on the arch */}
-        <path d="M32.4 65 V49.5 A17.6 17.6 0 0 1 50 31.9" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2.2" strokeLinecap="round" />
       </svg>
       {/* top gloss */}
       <div style={{ position: 'absolute', left: '-10%', right: '-10%', top: '-38%', height: '70%', borderRadius: '50%', background: 'linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0))' }} />

@@ -145,8 +145,13 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
         />
       </svg>
 
+      {/* logo */}
+      <div style={{ position: 'absolute', top: 112, left: 0, right: 0, display: 'flex', justifyContent: 'center', opacity: eyebrow, transform: `translateY(${(1 - eyebrow) * -12}px)` }}>
+        <HorizontalLogo b={p.brand} height={40} logoReady={p.logoReady} />
+      </div>
+
       {/* headline */}
-      <div style={{ position: 'absolute', top: 200, left: 0, right: 0, textAlign: 'center' }}>
+      <div style={{ position: 'absolute', top: 218, left: 0, right: 0, textAlign: 'center' }}>
         <div style={{ fontSize: 30, fontWeight: 500, letterSpacing: 9, textTransform: 'uppercase', color: t.mute, opacity: eyebrow, transform: `translateY(${(1 - eyebrow) * 16}px)` }}>
           Explore stays in
         </div>
