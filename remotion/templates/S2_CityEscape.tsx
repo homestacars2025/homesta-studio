@@ -11,6 +11,7 @@ import type { StudioProps, UnitProps } from '../shared/types';
 import { HorizontalLogo, theme } from '../shared/brand';
 import { BrandBackground } from '../shared/background';
 import { AppStoreBadge, GooglePlayBadge } from '../shared/storeBadges';
+import { AppIcon, PhoneMockup, phoneScreen } from '../shared/device';
 
 export const S2_FRAMES = 300; // 10s
 
@@ -24,9 +25,7 @@ const PH_W = 560;
 const PH_H = 1080;
 const PH_X = (1080 - PH_W) / 2;
 const PH_Y = 470;
-const BEZEL = 16;
-const SCR_W = PH_W - BEZEL * 2;
-const SCR_H = PH_H - BEZEL * 2;
+const SCR_W = phoneScreen(PH_W, PH_H).w;
 
 /* ── card geometry (inside the screen) ── */
 const PAD = 22;
@@ -45,7 +44,7 @@ const niceName = (s: string) => {
 const UnitCard: React.FC<{ u: UnitProps; t: ReturnType<typeof theme>; saved: boolean }> = ({ u, t, saved }) => {
   const s = u.specs ?? {};
   return (
-    <div style={{ width: CARD_W, height: CARD_H, borderRadius: 30, background: '#FFFFFF', boxShadow: '0 10px 28px rgba(14,14,16,0.08)', overflow: 'hidden' }}>
+    <div style={{ width: CARD_W, height: CARD_H, borderRadius: 30, background: '#FFFFFF', border: '1.5px solid #EFEEEA', boxShadow: '0 12px 30px rgba(14,14,16,0.07)', overflow: 'hidden' }}>
       <div style={{ position: 'relative', width: CARD_W, height: IMG_H }}>
         <Img src={u.photos[0]?.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', top: 14, left: 14, height: 38, padding: '0 16px', borderRadius: 999, background: 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', fontSize: 18, fontWeight: 600, color: t.ink }}>
@@ -173,12 +172,8 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
         style={{ transform: `rotate(${18 + (1 - clipIn) * 30}deg) scale(${0.6 + 0.4 * clipIn})`, opacity: clipIn }} />
 
       {/* phone */}
-      <div style={{
-        position: 'absolute', left: PH_X, top: PH_Y, width: PH_W, height: PH_H, borderRadius: 86, background: '#111214',
-        boxShadow: '0 50px 100px rgba(14,14,16,0.35), inset 0 0 0 3px #2a2b2f',
-        transform: `translateY(${(1 - phoneIn) * 900}px) rotate(${(1 - phoneIn) * 6}deg)`,
-      }}>
-        <div style={{ position: 'absolute', left: BEZEL, top: BEZEL, width: SCR_W, height: SCR_H, borderRadius: 72, overflow: 'hidden', background: '#F6F5F2' }}>
+      <PhoneMockup w={PH_W} h={PH_H} ink={t.ink} screenBg="#FFFFFF"
+        style={{ left: PH_X, top: PH_Y, transform: `translateY(${(1 - phoneIn) * 900}px) rotate(${(1 - phoneIn) * 6}deg)` }}>
           {/* scrolling content */}
           <div style={{ position: 'absolute', left: 0, top: 0, width: SCR_W, transform: `translateY(${-scroll}px)` }}>
             {/* app header */}
@@ -190,7 +185,7 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
               </div>
             </div>
             {/* search */}
-            <div style={{ position: 'absolute', top: 172, left: PAD, right: PAD, height: 64, borderRadius: 999, background: '#fff', display: 'flex', alignItems: 'center', gap: 12, padding: '0 10px 0 22px', boxShadow: '0 6px 18px rgba(14,14,16,0.06)', fontSize: 20, color: t.mute }}>
+            <div style={{ position: 'absolute', top: 172, left: PAD, right: PAD, height: 64, borderRadius: 999, background: '#F4F4F2', display: 'flex', alignItems: 'center', gap: 12, padding: '0 10px 0 22px', fontSize: 20, color: t.mute }}>
               <Search size={22} color={t.ink} />
               Stays in <b style={{ color: t.ink, fontWeight: 600 }}>{city}</b>
               <div style={{ flex: 1 }} />
@@ -219,24 +214,14 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
             })}
           </div>
 
-          {/* status bar + island (fixed) */}
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 84, background: `rgba(246,245,242,${0.6 + 0.4 * headerHide})` }} />
-          <div style={{ position: 'absolute', top: 28, left: 44, fontSize: 22, fontWeight: 600 }}>9:41</div>
-          <div style={{ position: 'absolute', top: 20, left: SCR_W / 2 - 74, width: 148, height: 42, borderRadius: 999, background: '#111214' }} />
-          <div style={{ position: 'absolute', top: 30, right: 40, display: 'flex', gap: 6, alignItems: 'center' }}>
-            <div style={{ width: 26, height: 14, borderRadius: 4, border: `2px solid ${t.ink}`, padding: 1 }}><div style={{ width: '80%', height: '100%', background: t.ink, borderRadius: 2 }} /></div>
-          </div>
-          {/* home indicator */}
-          <div style={{ position: 'absolute', bottom: 14, left: SCR_W / 2 - 70, width: 140, height: 6, borderRadius: 9, background: 'rgba(14,14,16,0.5)' }} />
-        </div>
-      </div>
+      </PhoneMockup>
 
       {/* app row under the phone: big app icon + "Download the Homesta app" over the store badges */}
       <div style={{
         position: 'absolute', top: PH_Y + PH_H + 30, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 22,
         transform: `translateY(${(1 - ctaIn) * 50}px)`, opacity: Math.min(1, ctaIn * 1.3),
       }}>
-        <Img src={staticFile('brand/3d/app-icon.png')} style={{ width: 132, height: 132, filter: 'drop-shadow(0 12px 18px rgba(14,14,16,0.2))' }} />
+        <AppIcon size={156} primary={t.primary} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ fontSize: 30, fontWeight: 600, color: t.ink, letterSpacing: -0.3 }}>
             Download the <span style={{ color: t.primary }}>Homesta</span> app
