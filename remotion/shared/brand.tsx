@@ -103,8 +103,8 @@ export const plural = (n: number | string | null | undefined, one: string, many:
  * (arch height = height of the "h" from baseline to top).
  * Uses the official PNG when uploaded (logoReady), else the vector version.
  */
-export const HorizontalLogo: React.FC<{ b: BrandProps; height: number; logoReady?: boolean; light?: boolean }> = ({
-  b, height, logoReady, light,
+export const HorizontalLogo: React.FC<{ b: BrandProps; height: number; logoReady?: boolean; light?: boolean; redArch?: boolean }> = ({
+  b, height, logoReady, light, redArch,
 }) => {
   const src = light ? b.logos.logo_horizontal_light : b.logos.logo_horizontal;
   if (logoReady && src) return <Img src={src} style={{ height }} />;
@@ -114,7 +114,7 @@ export const HorizontalLogo: React.FC<{ b: BrandProps; height: number; logoReady
   return (
     <div style={{ display: 'flex', alignItems: 'flex-end', gap: height * 0.28 }}>
       <svg width={height * (vw / vh)} height={height} viewBox={svg.viewbox} style={{ display: 'block' }}>
-        <path d={svg.path} fill="none" stroke={light ? '#FFFFFF' : theme(b).primary} strokeWidth={svg.stroke} strokeLinecap="round" />
+        <path d={svg.path} fill="none" stroke={light && !redArch ? '#FFFFFF' : theme(b).primary} strokeWidth={svg.stroke} strokeLinecap="round" />
       </svg>
       <div style={{
         fontFamily: '"Poppins", sans-serif', fontWeight: 500, fontSize, letterSpacing: -0.5,
