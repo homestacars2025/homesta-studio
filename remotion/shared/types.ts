@@ -51,6 +51,8 @@ export type UnitProps = {
   amenities: string[];
   photos: { url: string; w?: number; h?: number; cover?: boolean }[];
   photo_count?: number;
+  pay_at_arrival?: boolean;
+  deposit?: boolean;
   url?: string;
 };
 
