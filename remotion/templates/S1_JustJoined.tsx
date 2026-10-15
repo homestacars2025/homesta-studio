@@ -30,7 +30,7 @@ const niceName = (s: string) => {
 /* ── gateway = the brand mark (viewBox 307 292 466 496, stroke 69.5) ── */
 const S = 1.45;
 const GX = 540 - 233 * S;          // screen x of viewBox x=307
-const GY = 860 - 248 * S;          // screen y of viewBox y=292
+const GY = 790 - 248 * S;          // screen y of viewBox y=292
 const sx = (v: number) => GX + (v - 307) * S;
 const sy = (v: number) => GY + (v - 292) * S;
 const R_IN = 163.25;               // inner radius (198 - 69.5/2)
@@ -89,12 +89,12 @@ const Confetti: React.FC<{ f: number; start: number; fade: number }> = ({ f, sta
   return (
     <>
       {PIECES.map((p, i) => {
-        const x0 = p.side < 0 ? 200 : 880, y0 = 1470;
+        const x0 = p.side < 0 ? 110 : 970, y0 = 1300;
         const vx = Math.cos(p.a) * p.v * -p.side * 26, vy = Math.sin(p.a) * p.v * 26;
         const drag = 1 - Math.exp(-t * 1.6);
         const x = x0 + (vx / 1.6) * drag + Math.sin(t * 3 + i) * 30 * t;
         const y = y0 + (vy / 1.6) * drag + 260 * t * t;
-        if (y > 2000) return null;
+        if (y > 1400) return null; // keep the link-sticker slot clean
         return <div key={i} style={{ position: 'absolute', left: x, top: y, width: p.w, height: p.round ? p.w : p.h, borderRadius: p.round ? 99 : 2, background: p.c, transform: `rotate(${p.rot * t}deg) rotateX(${t * 400 + i * 20}deg)`, opacity: Math.min(1, 3 - t * 0.5) * fade }} />;
       })}
     </>
@@ -197,8 +197,8 @@ export const S1_JustJoined: React.FC<StudioProps> = (p) => {
         </div>
       </div>
       <Fireworks f={f} fade={textFade} />
-      {[{ x: -40, s: popL, flip: false }, { x: 680, s: popR, flip: true }].map((q, i) => (
-        <div key={i} style={{ position: 'absolute', left: q.x, top: 1430, width: 440, opacity: Math.min(1, q.s * 2) * textFade, transform: `${q.flip ? 'scaleX(-1)' : ''} translateY(${(1 - q.s) * 260}px) rotate(${-8 + (1 - q.s) * -30}deg)`, filter: 'drop-shadow(0 20px 22px rgba(14,14,16,0.22))' }}>
+      {[{ x: -150, s: popL, flip: false }, { x: 830, s: popR, flip: true }].map((q, i) => (
+        <div key={i} style={{ position: 'absolute', left: q.x, top: 1230, width: 400, opacity: Math.min(1, q.s * 2) * textFade, transform: `${q.flip ? 'scaleX(-1)' : ''} translateY(${(1 - q.s) * 260}px) rotate(${-8 + (1 - q.s) * -30}deg)`, filter: 'drop-shadow(0 20px 22px rgba(14,14,16,0.22))' }}>
           <Img src={asset('brand/3d/party-popper.png')} style={{ width: '100%' }} />
         </div>
       ))}
@@ -234,23 +234,18 @@ export const S1_JustJoined: React.FC<StudioProps> = (p) => {
           <div style={{ fontSize: 44, fontWeight: 600, lineHeight: 1.18, letterSpacing: -0.8, color: t.ink, opacity: cardTxt(0), transform: `translateY(${(1 - cardTxt(0)) * 16}px)` }}>{title}</div>
           <div style={{ marginTop: 14, fontFamily: '"JetBrains Mono", "SFMono-Regular", Menlo, monospace', fontSize: 30, letterSpacing: 4, textTransform: 'uppercase', color: '#8C8881', opacity: cardTxt(1) }}>{place}</div>
           <div style={{ marginTop: 10, fontSize: 34, fontWeight: 300, color: '#6E6A64', opacity: cardTxt(2) }}>{specLine}</div>
-          {u.price_from_usd ? (
-            <div style={{ marginTop: 16, fontSize: 34, color: t.ink, opacity: cardTxt(3) }}>
-              <b style={{ fontWeight: 700 }}>${Math.round(u.price_from_usd)}</b> <span style={{ fontWeight: 300, color: '#6E6A64' }}>/ night</span>
-            </div>
-          ) : null}
         </div>
       </div>
       {/* "Explore it now" + tapping finger → the admin places the Instagram LINK sticker in the dashed slot */}
-      <div style={{ position: 'absolute', top: 1352, left: 0, right: 0, textAlign: 'center', color: '#fff', opacity: end, textShadow: '0 3px 16px rgba(0,0,0,0.4)' }}>
+      <div style={{ position: 'absolute', top: 1372, left: 0, right: 0, textAlign: 'center', color: '#fff', opacity: end, textShadow: '0 3px 16px rgba(0,0,0,0.4)' }}>
         <div style={{ fontSize: 40, fontWeight: 700, letterSpacing: -0.5 }}>Explore it now</div>
       </div>
-      <div style={{ position: 'absolute', top: 1420, left: 290, width: 500, height: 104, borderRadius: 999, border: '3px dashed rgba(255,255,255,0.7)', opacity: end * 0.9 }} />
+      <div style={{ position: 'absolute', top: 1440, left: 290, width: 500, height: 104, borderRadius: 999, border: '3px dashed rgba(255,255,255,0.7)', opacity: end * 0.9 }} />
       {(() => {
         const tap = (f % 36) / 36;                     // tap loop
         const press = Math.sin(Math.min(1, tap * 2) * Math.PI);
         return (
-          <div style={{ position: 'absolute', left: 700, top: 1470, opacity: end }}>
+          <div style={{ position: 'absolute', left: 700, top: 1490, opacity: end }}>
             <div style={{ position: 'absolute', left: -6, top: -6, width: 64 + tap * 70, height: 64 + tap * 70, marginLeft: -tap * 35, marginTop: -tap * 35, borderRadius: 999, border: '4px solid rgba(255,255,255,0.9)', opacity: 1 - tap }} />
             <div style={{ transform: `translate(${10 - press * 8}px, ${14 - press * 10}px) rotate(-12deg) scale(${1 - press * 0.08})`, filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.35))' }}>
               <Pointer size={84} color="#14141A" fill="#FFFFFF" strokeWidth={1.6} />
@@ -258,7 +253,7 @@ export const S1_JustJoined: React.FC<StudioProps> = (p) => {
           </div>
         );
       })()}
-      <div style={{ position: 'absolute', top: 1575, left: 0, right: 0, textAlign: 'center', fontSize: 38, color: '#fff', opacity: end, textShadow: '0 2px 14px rgba(0,0,0,0.4)' }}>
+      <div style={{ position: 'absolute', top: 1600, left: 0, right: 0, textAlign: 'center', fontSize: 34, color: '#fff', opacity: end, textShadow: '0 2px 14px rgba(0,0,0,0.4)' }}>
         <span style={{ fontWeight: 700 }}>{t.site.replace(/\.com$/, '')}</span><span style={{ fontWeight: 300 }}>.com</span>
       </div>
     </AbsoluteFill>
