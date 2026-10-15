@@ -73,7 +73,7 @@ const UnitCard: React.FC<{ u: UnitProps; t: ReturnType<typeof theme>; saved: boo
 };
 /** a 3D brand prop image (transparent PNG) */
 const Prop: React.FC<{ src: string; x: number; y: number; w: number; rot: number; style?: React.CSSProperties }> = ({ src, x, y, w, rot, style }) => (
-  <div style={{ position: 'absolute', left: x, top: y, width: w, filter: 'drop-shadow(0 18px 22px rgba(14,14,16,0.22))', ...style }}>
+  <div style={{ position: 'absolute', left: x, top: y, width: w, ...style }}>
     <Img src={staticFile(src)} style={{ width: '100%', transform: `rotate(${rot}deg)` }} />
   </div>
 );

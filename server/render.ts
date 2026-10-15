@@ -6,7 +6,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { bundle } from '@remotion/bundler';
-import { renderMedia, renderStill, selectComposition, ensureBrowser } from '@remotion/renderer';
+import { renderMedia, renderStill, selectComposition, ensureBrowser, makeCancelSignal } from '@remotion/renderer';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ENTRY = path.resolve(__dirname, '../remotion/index.ts');
@@ -14,6 +14,8 @@ const ENTRY = path.resolve(__dirname, '../remotion/index.ts');
 let serveUrl: string | null = null;
 const browserExecutable = process.env.BROWSER_EXECUTABLE || null;
 const CONCURRENCY = Number(process.env.RENDER_CONCURRENCY || 1);
+/** a job that runs longer than this is cancelled and reported as failed (never blocks the queue) */
+const JOB_TIMEOUT_MS = Number(process.env.RENDER_TIMEOUT_MS || 8 * 60 * 1000);
 
 export async function warmUp() {
   if (!browserExecutable) await ensureBrowser();
@@ -44,7 +46,11 @@ export async function renderTemplate(opts: {
   const baseId = opts.compositionId.replace(/_/g, '-');
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'studio-'));
   const files: RenderedFile[] = [];
-  const common = { serveUrl: url, inputProps: opts.props, browserExecutable };
+  const { cancelSignal, cancel } = makeCancelSignal();
+  const timer = setTimeout(() => cancel(), JOB_TIMEOUT_MS);
+  // timeoutInMilliseconds: max wait for images/fonts per frame (delayRender)
+  const common = { serveUrl: url, inputProps: opts.props, browserExecutable, timeoutInMilliseconds: 90_000, cancelSignal };
+  try {
 
   if (opts.output === 'video') {
     const comp = await selectComposition({ ...common, id: baseId });
@@ -75,4 +81,9 @@ export async function renderTemplate(opts: {
     opts.onProgress?.(i / n);
   }
   return { dir, files, thumbnail: files[0].path };
+  } catch (e: any) {
+    throw new Error(String(e?.message ?? e).includes('cancel') ? `Render timed out after ${Math.round(JOB_TIMEOUT_MS / 60000)} min` : (e?.message ?? String(e)));
+  } finally {
+    clearTimeout(timer);
+  }
 }
