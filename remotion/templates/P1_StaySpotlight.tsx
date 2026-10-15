@@ -32,20 +32,20 @@ const slug = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,
 const price = (n?: number | null) => (n ? `$${Math.round(n * 10) / 10}` : '');
 const dist = (s?: string | null) => (s ? s.replace(/\s*walk$/i, '') : null);
 
-const Bg: React.FC<{ src?: string; dim?: number }> = ({ src, dim = 0 }) => (
+export const Bg: React.FC<{ src?: string; dim?: number }> = ({ src, dim = 0 }) => (
   <AbsoluteFill style={{ background: '#2F6FBF' }}>
     {src ? <Img src={src} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : null}
     {dim ? <AbsoluteFill style={{ background: `rgba(0,0,0,${dim})` }} /> : null}
   </AbsoluteFill>
 );
 
-const Site: React.FC<{ t: ReturnType<typeof theme>; top?: number }> = ({ t, top = 1262 }) => (
+export const Site: React.FC<{ t: ReturnType<typeof theme>; top?: number }> = ({ t, top = 1262 }) => (
   <div style={{ position: 'absolute', top, left: 0, right: 0, textAlign: 'center', fontSize: 40, fontWeight: 500, color: '#fff', letterSpacing: -0.5, textShadow: '0 2px 14px rgba(0,0,0,0.35)' }}>
     <span style={{ fontWeight: 700 }}>{t.site.replace(/\.com$/, '')}</span><span style={{ fontWeight: 300 }}>.com</span>
   </div>
 );
 
-const Logo: React.FC<{ p: StudioProps; top: number }> = ({ p, top }) => (
+export const Logo: React.FC<{ p: StudioProps; top: number }> = ({ p, top }) => (
   <div style={{ position: 'absolute', top, left: 0, right: 0, display: 'flex', justifyContent: 'center', filter: 'drop-shadow(0 2px 10px rgba(0,0,0,0.25))' }}>
     <HorizontalLogo b={p.brand} height={44} logoReady={p.logoReady} light redArch />
   </div>
@@ -95,9 +95,8 @@ const Cover: React.FC<{ p: StudioProps; units: UnitProps[]; bg?: string }> = ({ 
   );
 };
 
-/* ── 2–4 · one stay ── */
-const StaySlide: React.FC<{ p: StudioProps; u: UnitProps; i: number; n: number }> = ({ p, u, i, n }) => {
-  const t = theme(p.brand);
+/* ── glass stay panel (tab + photos + details) — shared with S1 ── */
+export const StayPanel: React.FC<{ u: UnitProps; t: ReturnType<typeof theme>; left: number; top: number; width?: number; style?: React.CSSProperties }> = ({ u, t, left, top, width = W - 192, style }) => {
   const ph = u.photos.map((x) => x.url);
   const s = u.specs ?? {};
   const more = Math.max(0, (u.photo_count ?? ph.length) - 5);
@@ -118,29 +117,25 @@ const StaySlide: React.FC<{ p: StudioProps; u: UnitProps; i: number; n: number }
     [Bath, s.baths, 'bathroom', 'bathrooms'],
     [Users, s.guests, 'guest', 'guests'],
   ];
-  const PX = 96, PY = 440, PW = W - PX * 2, PH = 540, TAB_W = Math.min(660, Math.max(420, short(u).length * 19 + 80)), TAB_H = 86;
+  const PW = width, PH = 540, TAB_W = Math.min(660, Math.max(420, short(u).length * 19 + 80)), TAB_H = 86;
   return (
-    <AbsoluteFill style={{ fontFamily: t.sans, color: t.ink }}>
-      <Bg src={ph[0]} />
-      <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.28) 100%)' }} />
-      <Logo p={p} top={170} />
-
+    <div style={{ position: 'absolute', left, top: top - TAB_H, width: PW, height: PH + TAB_H, color: t.ink, ...style }}>
       {/* glass panel + folder tab: one shape, tab rises from the panel with a smooth S-curve */}
       {(() => {
         const R = 30, C = 120, Hh = PH + TAB_H, xs = PW - TAB_W - C / 2;
         const d = `M ${R} ${TAB_H} L ${xs} ${TAB_H} C ${xs + C * 0.55} ${TAB_H} ${xs + C * 0.45} 0 ${xs + C} 0 L ${PW - R} 0 Q ${PW} 0 ${PW} ${R} L ${PW} ${Hh - R} Q ${PW} ${Hh} ${PW - R} ${Hh} L ${R} ${Hh} Q 0 ${Hh} 0 ${Hh - R} L 0 ${TAB_H + R} Q 0 ${TAB_H} ${R} ${TAB_H} Z`;
         return (
-          <div style={{ position: 'absolute', left: PX, top: PY - TAB_H, width: PW, height: Hh, filter: 'drop-shadow(0 30px 40px rgba(0,0,0,0.22))' }}>
+          <div style={{ position: 'absolute', left: 0, top: 0, width: PW, height: Hh, filter: 'drop-shadow(0 30px 40px rgba(0,0,0,0.22))' }}>
             <div style={{ position: 'absolute', inset: 0, clipPath: `path('${d}')`, background: 'rgba(255,255,255,0.86)', backdropFilter: 'blur(14px)' }} />
           </div>
         );
       })()}
       <div style={{
-        position: 'absolute', left: PX + PW - TAB_W + 10, top: PY - TAB_H, width: TAB_W - 10, height: TAB_H, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        position: 'absolute', left: PW - TAB_W + 10, top: 0, width: TAB_W - 10, height: TAB_H, display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: short(u).length > 18 ? 30 : 36, fontWeight: 800, letterSpacing: -1, color: t.primary, whiteSpace: 'nowrap',
       }}>{short(u)}</div>
       <div style={{
-        position: 'absolute', left: PX, top: PY, width: PW, height: PH, padding: 36, display: 'flex', gap: 26,
+        position: 'absolute', left: 0, top: TAB_H, width: PW, height: PH, padding: 36, display: 'flex', gap: 26,
       }}>
         {/* photo grid */}
         <div style={{ width: 400, display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -195,6 +190,19 @@ const StaySlide: React.FC<{ p: StudioProps; u: UnitProps; i: number; n: number }
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+/* ── 2–4 · one stay ── */
+const StaySlide: React.FC<{ p: StudioProps; u: UnitProps; i: number; n: number }> = ({ p, u }) => {
+  const t = theme(p.brand);
+  return (
+    <AbsoluteFill style={{ fontFamily: t.sans, color: t.ink }}>
+      <Bg src={u.photos[0]?.url} />
+      <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.28) 100%)' }} />
+      <Logo p={p} top={170} />
+      <StayPanel u={u} t={t} left={96} top={440} />
       <Site t={t} />
     </AbsoluteFill>
   );

@@ -1,0 +1,95 @@
+{
+ "brand": {
+  "key": "stay",
+  "name": "Homesta Stay",
+  "version": 1,
+  "site": "homestastay.com",
+  "handle": "@homestastay",
+  "default_cta": "Explore stays",
+  "colors": {
+   "primary": "#E52851",
+   "secondary": "#0E0E10",
+   "tertiary": "#FAFAF7",
+   "mute": "#8C8881",
+   "rule": "#E2DED4",
+   "red_ink": "#8C0E2A",
+   "paper_warm": "#F2EEE6",
+   "white": "#FFFFFF"
+  },
+  "fonts": {
+   "primary": {
+    "family": "Geist Sans"
+   },
+   "secondary": {
+    "family": "Inter"
+   },
+   "display": {
+    "family": "Playfair Display",
+    "style": "italic"
+   }
+  },
+  "logos": {
+   "icon": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/icon.png",
+   "wordmark": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/wordmark.png",
+   "logo_stacked": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-stacked.png",
+   "wordmark_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/wordmark-light.png",
+   "logo_horizontal": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-horizontal.png",
+   "logo_stacked_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-stacked-light.png",
+   "logo_horizontal_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-horizontal-light.png"
+  },
+  "icon_svg": {
+   "path": "M341.5 752 V525 A198 198 0 0 1 737.5 525 V752",
+   "viewbox": "307 292 466 496",
+   "stroke": 69.5
+  },
+  "radius": {
+   "card": 34,
+   "chip": 30,
+   "photo": 24,
+   "button": 999
+  }
+ },
+ "logoReady": false,
+ "template": "S1",
+ "render_id": "sample",
+ "params": {},
+ "unit": {
+  "id": "d7999e38-7c50-44f8-afc1-393d1f15bf27",
+  "name": "Pera Royal View",
+  "title": "Pera Royal View – Taksim Sea King Room",
+  "subtitle": "Taksim Sea King Room",
+  "type": "Apartment",
+  "district": "Beyoğlu",
+  "city": "Istanbul",
+  "price_from_usd": 123.2,
+  "specs": {
+   "guests": 4,
+   "bedrooms": 1,
+   "beds": 2,
+   "baths": 1
+  },
+  "amenities": [
+   "air_conditioning",
+   "dishwasher",
+   "elevator",
+   "heating",
+   "kitchen",
+   "parking",
+   "self_check_in",
+   "tv",
+   "washing_machine",
+   "wifi"
+  ],
+  "photos": [
+   {
+    "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/d7999e38-7c50-44f8-afc1-393d1f15bf27/a972024e-557c-4334-ba14-86ffec29a508.webp"
+   },
+   {
+    "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/d7999e38-7c50-44f8-afc1-393d1f15bf27/3dcccc3b-eaac-4e32-b8b8-22c6132df18a.webp"
+   },
+   {
+    "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/d7999e38-7c50-44f8-afc1-393d1f15bf27/535891ba-6e2e-4c93-b0ef-d250c328e9ac.webp"
+   }
+  ]
+ }
+}

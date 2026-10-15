@@ -8,6 +8,8 @@ import { S2_CityEscape, S2_FRAMES } from './templates/S2_CityEscape';
 import sampleS2 from '../test/sample-s2.json';
 import { P1_StaySpotlight, P1_SLIDES } from './templates/P1_StaySpotlight';
 import sampleP1 from '../test/sample-p1.json';
+import { S1_JustJoined, S1_FRAMES } from './templates/S1_JustJoined';
+import sampleS1 from '../test/sample-s1.json';
 import sample from '../test/sample-s3.json';
 
 /**
@@ -25,6 +27,15 @@ export const Root: React.FC = () => (
       width={1080}
       height={1920}
       defaultProps={sample as unknown as StudioProps}
+    />
+    <Composition
+      id="S1-JustJoined"
+      component={S1_JustJoined as React.FC<any>}
+      durationInFrames={S1_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+      defaultProps={sampleS1 as unknown as StudioProps}
     />
     <Composition
       id="S2-CityEscape"
