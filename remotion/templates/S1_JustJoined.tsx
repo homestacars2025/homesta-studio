@@ -9,7 +9,7 @@
  */
 import React from 'react';
 import { AbsoluteFill, Audio, Easing, Img, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { Heart } from 'lucide-react';
+import { Heart, Pointer } from 'lucide-react';
 import type { StudioProps } from '../shared/types';
 import { HorizontalLogo, theme } from '../shared/brand';
 import { asset } from '../shared/assets';
@@ -216,10 +216,10 @@ export const S1_JustJoined: React.FC<StudioProps> = (p) => {
         <span style={{ fontSize: 34, fontWeight: 600, letterSpacing: 6, textTransform: 'uppercase' }}>New on Homesta </span><span style={{ fontSize: 34 }}>🎉</span>
       </div>
       <div style={{
-        position: 'absolute', left: 90, top: 420, width: 900, borderRadius: 44, background: '#FFFFFF', padding: '30px 30px 34px',
+        position: 'absolute', left: 90, top: 400, width: 900, borderRadius: 44, background: '#FFFFFF', padding: '30px 30px 34px',
         boxShadow: '0 40px 90px rgba(0,0,0,0.35)', transform: `translateY(${(1 - card) * 900}px) scale(${0.92 + 0.08 * card})`, opacity: Math.min(1, card * 1.6),
       }}>
-        <div style={{ position: 'relative', height: 620, borderRadius: 34, overflow: 'hidden', background: '#ddd' }}>
+        <div style={{ position: 'relative', height: 560, borderRadius: 34, overflow: 'hidden', background: '#ddd' }}>
           {photo ? <Img src={photo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : null}
           <div style={{ position: 'absolute', top: 26, right: 26, width: 84, height: 84, borderRadius: 99, background: 'rgba(250,248,244,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Heart size={40} color={t.ink} strokeWidth={2} />
@@ -241,7 +241,24 @@ export const S1_JustJoined: React.FC<StudioProps> = (p) => {
           ) : null}
         </div>
       </div>
-      <div style={{ position: 'absolute', top: 1560, left: 0, right: 0, textAlign: 'center', fontSize: 42, color: '#fff', opacity: end, textShadow: '0 2px 14px rgba(0,0,0,0.4)' }}>
+      {/* "Explore it now" + tapping finger → the admin places the Instagram LINK sticker in the dashed slot */}
+      <div style={{ position: 'absolute', top: 1352, left: 0, right: 0, textAlign: 'center', color: '#fff', opacity: end, textShadow: '0 3px 16px rgba(0,0,0,0.4)' }}>
+        <div style={{ fontSize: 40, fontWeight: 700, letterSpacing: -0.5 }}>Explore it now</div>
+      </div>
+      <div style={{ position: 'absolute', top: 1420, left: 290, width: 500, height: 104, borderRadius: 999, border: '3px dashed rgba(255,255,255,0.7)', opacity: end * 0.9 }} />
+      {(() => {
+        const tap = (f % 36) / 36;                     // tap loop
+        const press = Math.sin(Math.min(1, tap * 2) * Math.PI);
+        return (
+          <div style={{ position: 'absolute', left: 700, top: 1470, opacity: end }}>
+            <div style={{ position: 'absolute', left: -6, top: -6, width: 64 + tap * 70, height: 64 + tap * 70, marginLeft: -tap * 35, marginTop: -tap * 35, borderRadius: 999, border: '4px solid rgba(255,255,255,0.9)', opacity: 1 - tap }} />
+            <div style={{ transform: `translate(${10 - press * 8}px, ${14 - press * 10}px) rotate(-12deg) scale(${1 - press * 0.08})`, filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.35))' }}>
+              <Pointer size={84} color="#14141A" fill="#FFFFFF" strokeWidth={1.6} />
+            </div>
+          </div>
+        );
+      })()}
+      <div style={{ position: 'absolute', top: 1575, left: 0, right: 0, textAlign: 'center', fontSize: 38, color: '#fff', opacity: end, textShadow: '0 2px 14px rgba(0,0,0,0.4)' }}>
         <span style={{ fontWeight: 700 }}>{t.site.replace(/\.com$/, '')}</span><span style={{ fontWeight: 300 }}>.com</span>
       </div>
     </AbsoluteFill>
