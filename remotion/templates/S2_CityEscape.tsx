@@ -5,8 +5,9 @@
  * the phone, framed by tilted city photos on the left and right.
  */
 import React from 'react';
-import { AbsoluteFill, Easing, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Easing, Img, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import { Bath, BedDouble, Bookmark, Search, SlidersHorizontal, Users } from 'lucide-react';
+import { asset } from '../shared/assets';
 import type { StudioProps, UnitProps } from '../shared/types';
 import { HorizontalLogo, theme } from '../shared/brand';
 import { BrandBackground } from '../shared/background';
@@ -74,7 +75,7 @@ const UnitCard: React.FC<{ u: UnitProps; t: ReturnType<typeof theme>; saved: boo
 /** a 3D brand prop image (transparent PNG) */
 const Prop: React.FC<{ src: string; x: number; y: number; w: number; rot: number; style?: React.CSSProperties }> = ({ src, x, y, w, rot, style }) => (
   <div style={{ position: 'absolute', left: x, top: y, width: w, ...style }}>
-    <Img src={staticFile(src)} style={{ width: '100%', transform: `rotate(${rot}deg)` }} />
+    <Img src={asset(src)} style={{ width: '100%', transform: `rotate(${rot}deg)` }} />
   </div>
 );
 const row: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 5 };

@@ -1,5 +1,6 @@
 import React from 'react';
-import { AbsoluteFill, Img, staticFile } from 'remotion';
+import { AbsoluteFill, Img } from 'remotion';
+import { asset } from './assets';
 
 /**
  * Shared Homesta background: static brand-icon pattern under a veil that is
@@ -26,7 +27,7 @@ export const BrandBackground: React.FC<{
         : '#FFFFFF',
     }}>
       <Img
-        src={staticFile(`brand/pattern-${aspect}.png`)}
+        src={asset(`brand/pattern-${aspect}.png`)}
         style={{
           width: '100%', height: '100%',
           opacity: opacity ?? (brand ? 0.16 : PATTERN_OPACITY),

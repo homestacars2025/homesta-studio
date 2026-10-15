@@ -3,7 +3,8 @@
  * Target: district. Data: district name + one unit (photos, specs, amenities) + brand.
  */
 import React from 'react';
-import { AbsoluteFill, Easing, Img, staticFile, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Easing, Img, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { asset } from '../shared/assets';
 import type { StudioProps } from '../shared/types';
 import { StackedLogo, pickAmenities, plural, theme } from '../shared/brand';
 
@@ -40,7 +41,7 @@ const PATTERN_MASK =
 const Background: React.FC = () => (
   <AbsoluteFill style={{ background: '#FFFFFF' }}>
     <Img
-      src={staticFile('brand/pattern-9x16.png')}
+      src={asset('brand/pattern-9x16.png')}
       style={{ width: '100%', height: '100%', opacity: PATTERN_OPACITY, WebkitMaskImage: PATTERN_MASK, maskImage: PATTERN_MASK }}
     />
   </AbsoluteFill>
