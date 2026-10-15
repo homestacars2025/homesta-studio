@@ -11,9 +11,10 @@ import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-ext-400.css';
 import '@fontsource/inter/latin-ext-500.css';
 import '@fontsource/poppins/latin-500.css';
-import { continueRender, delayRender } from 'remotion';
+import { continueRender, delayRender, getRemotionEnvironment } from 'remotion';
 
-if (typeof document !== 'undefined') {
+// Only block frames while rendering on the server; in the live @remotion/player preview fonts just swap in.
+if (typeof document !== 'undefined' && getRemotionEnvironment().isRendering) {
   const h = delayRender('fonts');
   Promise.all([
     document.fonts.load('italic 700 100px "Playfair Display"', 'Beyoğlu Şişli Kağıthane'),

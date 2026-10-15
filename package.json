@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Homesta Studio – renders brand stories & posters from the Homesta Stay database",
+  "description": "Homesta Studio \u2013 renders brand stories & posters from the Homesta Stay database",
   "scripts": {
     "start": "tsx server/worker.ts",
     "studio": "remotion studio remotion/index.ts",
@@ -17,17 +17,32 @@
     "@fontsource/inter": "^5.1.0",
     "@fontsource/playfair-display": "^5.1.0",
     "@fontsource/poppins": "^5.1.0",
+    "lucide-react": "^0.460.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.2.0",
+    "react-dom": ">=18.2.0",
+    "remotion": "4.0.242"
+  },
+  "devDependencies": {
     "@remotion/bundler": "^4.0.242",
     "@remotion/cli": "^4.0.242",
     "@remotion/renderer": "^4.0.242",
     "@supabase/supabase-js": "^2.45.4",
     "@types/node": "^22.7.5",
     "@types/react": "^18.3.11",
-    "lucide-react": "^0.460.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "remotion": "^4.0.242",
+    "remotion": "4.0.242",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3"
-  }
+  },
+  "exports": {
+    "./remotion/registry": "./remotion/registry.ts",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "./remotion/shared/fonts.ts",
+    "*.css"
+  ]
 }
