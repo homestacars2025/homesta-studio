@@ -41,7 +41,7 @@ const Bg: React.FC<{ src?: string; dim?: number }> = ({ src, dim = 0 }) => (
 
 const Site: React.FC<{ t: ReturnType<typeof theme>; top?: number }> = ({ t, top = 1262 }) => (
   <div style={{ position: 'absolute', top, left: 0, right: 0, textAlign: 'center', fontSize: 40, fontWeight: 500, color: '#fff', letterSpacing: -0.5, textShadow: '0 2px 14px rgba(0,0,0,0.35)' }}>
-    {t.site}
+    <span style={{ fontWeight: 700 }}>{t.site.replace(/\.com$/, '')}</span><span style={{ fontWeight: 300 }}>.com</span>
   </div>
 );
 
@@ -118,15 +118,12 @@ const StaySlide: React.FC<{ p: StudioProps; u: UnitProps; i: number; n: number }
     [Bath, s.baths, 'bathroom', 'bathrooms'],
     [Users, s.guests, 'guest', 'guests'],
   ];
-  const PX = 96, PY = 700, PW = W - PX * 2, PH = 540, TAB_W = Math.min(660, Math.max(420, short(u).length * 19 + 80)), TAB_H = 86;
+  const PX = 96, PY = 600, PW = W - PX * 2, PH = 540, TAB_W = Math.min(660, Math.max(420, short(u).length * 19 + 80)), TAB_H = 86;
   return (
     <AbsoluteFill style={{ fontFamily: t.sans, color: t.ink }}>
       <Bg src={ph[0]} />
       <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.28) 100%)' }} />
       <Logo p={p} top={170} />
-      <div style={{ position: 'absolute', top: 44, right: 40, height: 64, padding: '0 22px', borderRadius: 999, background: 'rgba(30,30,32,0.55)', color: '#fff', fontSize: 30, fontWeight: 500, display: 'flex', alignItems: 'center' }}>
-        {i + 1}/{n + 1}
-      </div>
 
       {/* folder tab */}
       <div style={{

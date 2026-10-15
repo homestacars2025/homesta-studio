@@ -2,6 +2,7 @@
 // Families must match media.brand_kits.font_* rows.
 import '@fontsource/playfair-display/latin-700-italic.css';
 import '@fontsource/playfair-display/latin-ext-700-italic.css';
+import '@fontsource/geist-sans/300.css';
 import '@fontsource/geist-sans/400.css';
 import '@fontsource/geist-sans/500.css';
 import '@fontsource/geist-sans/600.css';
