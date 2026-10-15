@@ -6,6 +6,8 @@ import { S3_FindYourStayIn, S3_FRAMES } from './templates/S3_FindYourStayIn';
 import { S7_StayCard } from './templates/S7_StayCard';
 import { S2_CityEscape, S2_FRAMES } from './templates/S2_CityEscape';
 import sampleS2 from '../test/sample-s2.json';
+import { P1_StaySpotlight, P1_SLIDES } from './templates/P1_StaySpotlight';
+import sampleP1 from '../test/sample-p1.json';
 import sample from '../test/sample-s3.json';
 
 /**
@@ -40,5 +42,15 @@ export const Root: React.FC = () => (
       height={1920}
       defaultProps={sample as unknown as StudioProps}
     />
+    {Array.from({ length: P1_SLIDES }, (_, i) => (
+      <Still
+        key={i}
+        id={`P1-StaySpotlight-S${i + 1}`}
+        component={P1_StaySpotlight as React.FC<any>}
+        width={1080}
+        height={1350}
+        defaultProps={{ ...(sampleP1 as unknown as StudioProps), slide: i + 1 }}
+      />
+    ))}
   </>
 );
