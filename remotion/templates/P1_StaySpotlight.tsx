@@ -118,23 +118,29 @@ const StaySlide: React.FC<{ p: StudioProps; u: UnitProps; i: number; n: number }
     [Bath, s.baths, 'bathroom', 'bathrooms'],
     [Users, s.guests, 'guest', 'guests'],
   ];
-  const PX = 96, PY = 600, PW = W - PX * 2, PH = 540, TAB_W = Math.min(660, Math.max(420, short(u).length * 19 + 80)), TAB_H = 86;
+  const PX = 96, PY = 440, PW = W - PX * 2, PH = 540, TAB_W = Math.min(660, Math.max(420, short(u).length * 19 + 80)), TAB_H = 86;
   return (
     <AbsoluteFill style={{ fontFamily: t.sans, color: t.ink }}>
       <Bg src={ph[0]} />
       <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.28) 100%)' }} />
       <Logo p={p} top={170} />
 
-      {/* folder tab */}
+      {/* glass panel + folder tab: one shape, tab rises from the panel with a smooth S-curve */}
+      {(() => {
+        const R = 30, C = 120, Hh = PH + TAB_H, xs = PW - TAB_W - C / 2;
+        const d = `M ${R} ${TAB_H} L ${xs} ${TAB_H} C ${xs + C * 0.55} ${TAB_H} ${xs + C * 0.45} 0 ${xs + C} 0 L ${PW - R} 0 Q ${PW} 0 ${PW} ${R} L ${PW} ${Hh - R} Q ${PW} ${Hh} ${PW - R} ${Hh} L ${R} ${Hh} Q 0 ${Hh} 0 ${Hh - R} L 0 ${TAB_H + R} Q 0 ${TAB_H} ${R} ${TAB_H} Z`;
+        return (
+          <div style={{ position: 'absolute', left: PX, top: PY - TAB_H, width: PW, height: Hh, filter: 'drop-shadow(0 30px 40px rgba(0,0,0,0.22))' }}>
+            <div style={{ position: 'absolute', inset: 0, clipPath: `path('${d}')`, background: 'rgba(255,255,255,0.86)', backdropFilter: 'blur(14px)' }} />
+          </div>
+        );
+      })()}
       <div style={{
-        position: 'absolute', left: PX + PW - TAB_W, top: PY - TAB_H + 2, width: TAB_W, height: TAB_H, borderRadius: '30px 30px 0 0',
-        background: 'rgba(255,255,255,0.86)', backdropFilter: 'blur(14px)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: short(u).length > 18 ? 30 : 36, fontWeight: 800, letterSpacing: -1, color: t.primary, whiteSpace: 'nowrap', padding: '0 20px',
+        position: 'absolute', left: PX + PW - TAB_W + 10, top: PY - TAB_H, width: TAB_W - 10, height: TAB_H, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: short(u).length > 18 ? 30 : 36, fontWeight: 800, letterSpacing: -1, color: t.primary, whiteSpace: 'nowrap',
       }}>{short(u)}</div>
-      {/* glass panel */}
       <div style={{
-        position: 'absolute', left: PX, top: PY, width: PW, height: PH, borderRadius: '30px 0 30px 30px', background: 'rgba(255,255,255,0.86)',
-        backdropFilter: 'blur(14px)', boxShadow: '0 30px 70px rgba(0,0,0,0.25)', padding: 36, display: 'flex', gap: 26,
+        position: 'absolute', left: PX, top: PY, width: PW, height: PH, padding: 36, display: 'flex', gap: 26,
       }}>
         {/* photo grid */}
         <div style={{ width: 400, display: 'flex', flexDirection: 'column', gap: 10 }}>
