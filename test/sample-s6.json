@@ -1,0 +1,144 @@
+{
+ "brand": {
+  "key": "stay",
+  "name": "Homesta Stay",
+  "version": 1,
+  "site": "homestastay.com",
+  "handle": "@homestastay",
+  "default_cta": "Explore stays",
+  "colors": {
+   "primary": "#E52851",
+   "secondary": "#0E0E10",
+   "tertiary": "#FAFAF7",
+   "mute": "#8C8881",
+   "rule": "#E2DED4",
+   "red_ink": "#8C0E2A",
+   "paper_warm": "#F2EEE6",
+   "white": "#FFFFFF"
+  },
+  "fonts": {
+   "primary": {
+    "family": "Geist Sans"
+   },
+   "secondary": {
+    "family": "Inter"
+   },
+   "display": {
+    "family": "Playfair Display",
+    "style": "italic"
+   }
+  },
+  "logos": {
+   "icon": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/icon.png",
+   "wordmark": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/wordmark.png",
+   "logo_stacked": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-stacked.png",
+   "wordmark_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/wordmark-light.png",
+   "logo_horizontal": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-horizontal.png",
+   "logo_stacked_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-stacked-light.png",
+   "logo_horizontal_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-horizontal-light.png"
+  },
+  "icon_svg": {
+   "path": "M341.5 752 V525 A198 198 0 0 1 737.5 525 V752",
+   "viewbox": "307 292 466 496",
+   "stroke": 69.5
+  },
+  "radius": {
+   "card": 34,
+   "chip": 30,
+   "photo": 24,
+   "button": 999
+  }
+ },
+ "logoReady": false,
+ "template": "S6",
+ "render_id": "sample",
+ "params": {},
+ "district": {
+  "id": "ac19f7c3-f2ca-4df7-832c-02361b3af86a",
+  "name": "Beyoğlu",
+  "city": "Istanbul",
+  "image": null
+ },
+ "units": [
+  {
+   "id": "18216569-985c-4dd9-a1b4-e5a9cc8c0e77",
+   "name": "Elegant 2-Bedroom Apartment in a Premium Residenti",
+   "title": "Elegant 2-Bedroom Apartment in a Premium Residenti",
+   "subtitle": null,
+   "type": "Apartment",
+   "district": "Beyoğlu",
+   "city": "Istanbul",
+   "price_from_usd": 134.4,
+   "specs": {
+    "guests": 6,
+    "bedrooms": 2,
+    "beds": 2,
+    "baths": 2
+   },
+   "amenities": [
+    "air_conditioning",
+    "dishwasher",
+    "elevator",
+    "heating",
+    "kitchen",
+    "parking",
+    "self_check_in",
+    "tv",
+    "washing_machine",
+    "wifi"
+   ],
+   "photos": [
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/18216569-985c-4dd9-a1b4-e5a9cc8c0e77/3ccb6ad0-1d73-494a-81e0-f277cf3394fd.jpg"
+    },
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/18216569-985c-4dd9-a1b4-e5a9cc8c0e77/22ad303c-2570-4d30-bda7-a8953e48fa85.jpg"
+    },
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/18216569-985c-4dd9-a1b4-e5a9cc8c0e77/55c9b565-4c22-492c-be92-ad76d8d7f1d2.jpg"
+    }
+   ],
+   "pay_at_arrival": true
+  },
+  {
+   "id": "6cb553ff-7a4c-4f0b-bba2-e7900a281123",
+   "name": "Pera Prime Stay",
+   "title": "Pera Prime Stay – Classic City Rooms",
+   "subtitle": "Classic City Rooms",
+   "type": "Apartment",
+   "district": "Beyoğlu",
+   "city": "Istanbul",
+   "price_from_usd": 67.2,
+   "specs": {
+    "guests": 3,
+    "bedrooms": 1,
+    "beds": 1,
+    "baths": 1
+   },
+   "amenities": [
+    "air_conditioning",
+    "dishwasher",
+    "elevator",
+    "heating",
+    "kitchen",
+    "parking",
+    "self_check_in",
+    "tv",
+    "washing_machine",
+    "wifi"
+   ],
+   "photos": [
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/6cb553ff-7a4c-4f0b-bba2-e7900a281123/50e545d2-dff5-4d15-95be-2903936d2c08.webp"
+    },
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/6cb553ff-7a4c-4f0b-bba2-e7900a281123/b2550493-f8c4-4a18-bc7b-73e270e6bf21.webp"
+    },
+    {
+     "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/6cb553ff-7a4c-4f0b-bba2-e7900a281123/a4825b8b-30b0-4983-b9b2-1c084e3a20b8.webp"
+    }
+   ],
+   "pay_at_arrival": true
+  }
+ ]
+}

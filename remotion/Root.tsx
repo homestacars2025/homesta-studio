@@ -10,6 +10,8 @@ import { P1_StaySpotlight, P1_SLIDES } from './templates/P1_StaySpotlight';
 import sampleP1 from '../test/sample-p1.json';
 import { S1_JustJoined, S1_FRAMES } from './templates/S1_JustJoined';
 import sampleS1 from '../test/sample-s1.json';
+import { S6_ThisOrThat, S6_FRAMES } from './templates/S6_ThisOrThat';
+import sampleS6 from '../test/sample-s6.json';
 import sample from '../test/sample-s3.json';
 
 /**
@@ -36,6 +38,15 @@ export const Root: React.FC = () => (
       width={1080}
       height={1920}
       defaultProps={sampleS1 as unknown as StudioProps}
+    />
+    <Composition
+      id="S6-ThisOrThat"
+      component={S6_ThisOrThat as React.FC<any>}
+      durationInFrames={S6_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+      defaultProps={sampleS6 as unknown as StudioProps}
     />
     <Composition
       id="S2-CityEscape"
