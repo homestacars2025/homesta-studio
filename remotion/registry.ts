@@ -8,6 +8,7 @@ import './shared/fonts';
 import { S1_JustJoined, S1_FRAMES } from './templates/S1_JustJoined';
 import { S2_CityEscape, S2_FRAMES } from './templates/S2_CityEscape';
 import { S6_ThisOrThat, S6_FRAMES } from './templates/S6_ThisOrThat';
+import { S4_InsideTheStay, S4_FRAMES } from './templates/S4_InsideTheStay';
 import { S3_FindYourStayIn, S3_FRAMES } from './templates/S3_FindYourStayIn';
 import { S7_StayCard } from './templates/S7_StayCard';
 import { P1_StaySpotlight, P1_SLIDES } from './templates/P1_StaySpotlight';
@@ -27,6 +28,7 @@ export type TemplateDef = {
 
 export const TEMPLATES: Record<string, TemplateDef> = {
   S1_JustJoined: { component: S1_JustJoined as React.FC<any>, kind: 'video', width: 1080, height: 1920, fps: 30, durationInFrames: S1_FRAMES },
+  S4_InsideTheStay: { component: S4_InsideTheStay as React.FC<any>, kind: 'video', width: 1080, height: 1920, fps: 30, durationInFrames: S4_FRAMES },
   S6_ThisOrThat: { component: S6_ThisOrThat as React.FC<any>, kind: 'video', width: 1080, height: 1920, fps: 30, durationInFrames: S6_FRAMES },
   S2_CityEscape: { component: S2_CityEscape as React.FC<any>, kind: 'video', width: 1080, height: 1920, fps: 30, durationInFrames: S2_FRAMES },
   S3_FindYourStayIn: { component: S3_FindYourStayIn as React.FC<any>, kind: 'video', width: 1080, height: 1920, fps: 30, durationInFrames: S3_FRAMES },

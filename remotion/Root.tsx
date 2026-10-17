@@ -12,6 +12,8 @@ import { S1_JustJoined, S1_FRAMES } from './templates/S1_JustJoined';
 import sampleS1 from '../test/sample-s1.json';
 import { S6_ThisOrThat, S6_FRAMES } from './templates/S6_ThisOrThat';
 import sampleS6 from '../test/sample-s6.json';
+import { S4_InsideTheStay, S4_FRAMES } from './templates/S4_InsideTheStay';
+import sampleS4 from '../test/sample-s4.json';
 import sample from '../test/sample-s3.json';
 
 /**
@@ -38,6 +40,15 @@ export const Root: React.FC = () => (
       width={1080}
       height={1920}
       defaultProps={sampleS1 as unknown as StudioProps}
+    />
+    <Composition
+      id="S4-InsideTheStay"
+      component={S4_InsideTheStay as React.FC<any>}
+      durationInFrames={S4_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+      defaultProps={sampleS4 as unknown as StudioProps}
     />
     <Composition
       id="S6-ThisOrThat"

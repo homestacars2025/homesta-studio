@@ -1,0 +1,99 @@
+{
+  "brand": {
+    "key": "stay",
+    "name": "Homesta Stay",
+    "version": 1,
+    "site": "homestastay.com",
+    "handle": "@homestastay",
+    "default_cta": "Explore stays",
+    "colors": {
+      "primary": "#E52851",
+      "secondary": "#0E0E10",
+      "tertiary": "#FAFAF7",
+      "mute": "#8C8881",
+      "rule": "#E2DED4",
+      "red_ink": "#8C0E2A",
+      "paper_warm": "#F2EEE6",
+      "white": "#FFFFFF"
+    },
+    "fonts": {
+      "primary": {
+        "family": "Geist Sans"
+      },
+      "secondary": {
+        "family": "Inter"
+      },
+      "display": {
+        "family": "Playfair Display",
+        "style": "italic"
+      }
+    },
+    "logos": {
+      "icon": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/icon.png",
+      "wordmark": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/wordmark.png",
+      "logo_stacked": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-stacked.png",
+      "wordmark_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/wordmark-light.png",
+      "logo_horizontal": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-horizontal.png",
+      "logo_stacked_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-stacked-light.png",
+      "logo_horizontal_light": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/brand-assets/stay/logo-horizontal-light.png"
+    },
+    "icon_svg": {
+      "path": "M341.5 752 V525 A198 198 0 0 1 737.5 525 V752",
+      "viewbox": "307 292 466 496",
+      "stroke": 69.5
+    },
+    "radius": {
+      "card": 34,
+      "chip": 30,
+      "photo": 24,
+      "button": 999
+    }
+  },
+  "logoReady": false,
+  "template": "S4",
+  "render_id": "sample",
+  "params": {},
+  "unit": {
+    "id": "37d1b14c-4e0b-4a8d-b39d-874cd98cd514",
+    "title": "Villa Green Olive with Private Secure Pool",
+    "name": "Villa Green Olive with Private Secure Pool",
+    "type": "Villa",
+    "district": null,
+    "city": "Marmaris",
+    "price_from_usd": 319.2,
+    "pay_at_arrival": true,
+    "deposit": true,
+    "specs": {
+      "bedrooms": 3,
+      "beds": 4,
+      "baths": 3,
+      "guests": 6
+    },
+    "amenities": [
+      "pool",
+      "wifi",
+      "kitchen",
+      "air_conditioning"
+    ],
+    "photos": [
+      {
+        "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/37d1b14c-4e0b-4a8d-b39d-874cd98cd514/260d9b1b-dd93-4ecf-9f99-703c03baef9f.jpeg"
+      },
+      {
+        "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/37d1b14c-4e0b-4a8d-b39d-874cd98cd514/fd93e5b0-cf3f-4885-b1bd-20bca4b66f9d.webp"
+      },
+      {
+        "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/37d1b14c-4e0b-4a8d-b39d-874cd98cd514/b8a6c292-317d-4a37-a3d6-bf3fa5897af8.webp"
+      },
+      {
+        "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/37d1b14c-4e0b-4a8d-b39d-874cd98cd514/1e4b85df-e180-48a8-af0a-b33c822d965b.webp"
+      },
+      {
+        "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/37d1b14c-4e0b-4a8d-b39d-874cd98cd514/d895f5e1-b605-4cc9-a45a-7b902cda75e7.webp"
+      },
+      {
+        "url": "https://djtpksherrayzxmunvkv.supabase.co/storage/v1/object/public/unit-media/37d1b14c-4e0b-4a8d-b39d-874cd98cd514/f29d4a48-7620-4531-acfa-18a4cae273e7.webp"
+      }
+    ]
+  }
+}
