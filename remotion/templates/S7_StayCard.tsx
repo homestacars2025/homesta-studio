@@ -86,7 +86,7 @@ export const S7_StayCard: React.FC<StudioProps> = (p) => {
             <div key={'s' + i} style={tile(t)}>
               <I size={38} color={t.primary} strokeWidth={1.8} />
               <div style={{ fontSize: 30, fontWeight: 700, lineHeight: 1, color: t.ink }}>{x.n}</div>
-              <div style={{ fontSize: 17, fontWeight: 500, color: t.mute }}>{x.l}</div>
+              <div style={{ fontSize: 19, fontWeight: 500, color: t.mute }}>{x.l}</div>
             </div>
           );
         })}

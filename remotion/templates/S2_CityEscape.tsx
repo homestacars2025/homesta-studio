@@ -48,7 +48,7 @@ const UnitCard: React.FC<{ u: UnitProps; t: ReturnType<typeof theme>; saved: boo
     <div style={{ width: CARD_W, height: CARD_H, borderRadius: 30, background: '#FFFFFF', border: '1.5px solid #EFEEEA', boxShadow: '0 12px 30px rgba(14,14,16,0.07)', overflow: 'hidden' }}>
       <div style={{ position: 'relative', width: CARD_W, height: IMG_H }}>
         <Img src={u.photos[0]?.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        <div style={{ position: 'absolute', top: 14, left: 14, height: 38, padding: '0 16px', borderRadius: 999, background: 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', fontSize: 18, fontWeight: 600, color: t.ink }}>
+        <div style={{ position: 'absolute', top: 14, left: 14, height: 38, padding: '0 16px', borderRadius: 999, background: 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', fontSize: 20, fontWeight: 600, color: t.ink }}>
           {u.type}
         </div>
         <div style={{ position: 'absolute', top: 12, right: 12, width: 46, height: 46, borderRadius: 999, background: saved ? t.primary : 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -57,7 +57,7 @@ const UnitCard: React.FC<{ u: UnitProps; t: ReturnType<typeof theme>; saved: boo
       </div>
       <div style={{ padding: '14px 18px 0' }}>
         <div style={{ fontSize: 23, fontWeight: 600, lineHeight: 1.2, color: t.ink, height: 56, overflow: 'hidden' }}>{niceName(u.name || u.title)}</div>
-        <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 14, fontSize: 18, color: t.mute }}>
+        <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 14, fontSize: 20, color: t.mute }}>
           {s.guests ? <span style={row}><Users size={18} color={t.primary} />{s.guests}</span> : null}
           {s.bedrooms ? <span style={row}><BedDouble size={18} color={t.primary} />{s.bedrooms}</span> : null}
           {s.baths ? <span style={row}><Bath size={18} color={t.primary} />{s.baths}</span> : null}
@@ -203,7 +203,7 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
             <div style={{ position: 'absolute', top: 262, left: PAD, right: PAD, display: 'flex', alignItems: 'baseline' }}>
               <span style={{ fontSize: 26, fontWeight: 700 }}>Top stays</span>
               <div style={{ flex: 1 }} />
-              <span style={{ fontSize: 18, color: t.mute }}>{n} stays</span>
+              <span style={{ fontSize: 20, color: t.mute }}>{n} stays</span>
             </div>
             {/* cards */}
             {units.map((x, i) => {

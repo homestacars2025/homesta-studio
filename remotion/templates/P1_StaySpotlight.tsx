@@ -60,12 +60,12 @@ const MiniCard: React.FC<{ u: UnitProps; t: ReturnType<typeof theme> }> = ({ u, 
         <Heart size={18} color={t.ink} />
       </div>
     </div>
-    <div style={{ marginTop: 10, fontSize: 15, fontWeight: 600, color: t.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{niceName(u.title || u.name)}</div>
-    <div style={{ marginTop: 3, fontSize: 11, letterSpacing: 1.5, color: t.mute, fontFamily: 'monospace', textTransform: 'uppercase' }}>
+    <div style={{ marginTop: 10, fontSize: 19, fontWeight: 600, color: t.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{niceName(u.title || u.name)}</div>
+    <div style={{ marginTop: 3, fontSize: 16, letterSpacing: 1.5, color: t.mute, fontFamily: 'monospace', textTransform: 'uppercase' }}>
       {[u.district, u.city].filter(Boolean).join(' · ')}
     </div>
-    <div style={{ marginTop: 4, fontSize: 15, fontWeight: 700, color: t.primary }}>
-      {price(u.price_from_usd)} <span style={{ fontWeight: 400, color: t.mute, fontSize: 12 }}>/ night</span>
+    <div style={{ marginTop: 4, fontSize: 19, fontWeight: 700, color: t.primary }}>
+      {price(u.price_from_usd)} <span style={{ fontWeight: 400, color: t.mute, fontSize: 17 }}>/ night</span>
     </div>
   </div>
 );
@@ -152,8 +152,8 @@ export const StayPanel: React.FC<{ u: UnitProps; t: ReturnType<typeof theme>; le
                 {k === 4 && (
                   <>
                     <AbsoluteFill style={{ background: 'rgba(0,0,0,0.38)' }} />
-                    {more > 0 && <div style={{ position: 'absolute', top: '36%', left: 0, right: 0, textAlign: 'center', color: '#fff', fontSize: 15 }}>+{more}</div>}
-                    <div style={{ position: 'absolute', right: 8, bottom: 10, height: 30, padding: '0 12px', borderRadius: 99, background: '#fff', display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600 }}>
+                    {more > 0 && <div style={{ position: 'absolute', top: '36%', left: 0, right: 0, textAlign: 'center', color: '#fff', fontSize: 19 }}>+{more}</div>}
+                    <div style={{ position: 'absolute', right: 8, bottom: 10, height: 36, padding: '0 14px', borderRadius: 99, background: '#fff', display: 'flex', alignItems: 'center', gap: 6, fontSize: 16, fontWeight: 600 }}>
                       <Images size={13} /> Show all photos
                     </div>
                   </>
@@ -166,7 +166,7 @@ export const StayPanel: React.FC<{ u: UnitProps; t: ReturnType<typeof theme>; le
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <div style={card}>
             <div style={{ fontSize: 24, fontWeight: 500, lineHeight: 1.25, letterSpacing: -0.4 }}>{niceName(u.title || u.name)}</div>
-            <div style={{ marginTop: 8, fontSize: 12, letterSpacing: 2, color: t.mute, fontFamily: 'monospace', textTransform: 'uppercase' }}>
+            <div style={{ marginTop: 8, fontSize: 17, letterSpacing: 2, color: t.mute, fontFamily: 'monospace', textTransform: 'uppercase' }}>
               {[u.district, u.city].filter(Boolean).join(' · ')}
             </div>
           </div>
@@ -176,14 +176,14 @@ export const StayPanel: React.FC<{ u: UnitProps; t: ReturnType<typeof theme>; le
               {details.map(([I, v, one, many], k) => (
                 <div key={k}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 26, fontWeight: 700 }}><I size={18} color={t.mute} />{v ?? '–'}</div>
-                  <div style={{ fontSize: 13, color: t.mute, marginLeft: 26 }}>{Number(v) === 1 ? one : many}</div>
+                  <div style={{ fontSize: 18, color: t.mute, marginLeft: 26 }}>{Number(v) === 1 ? one : many}</div>
                 </div>
               ))}
             </div>
           </div>
           <div style={{ ...card, flex: 1, padding: '10px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-            {facts.slice(0, 8).map(([I, l, v]) => (
-              <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14 }}>
+            {facts.slice(0, 6).map(([I, l, v]) => (
+              <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 19 }}>
                 <I size={16} color={t.mute} /><span style={{ color: t.mute }}>{l}</span><div style={{ flex: 1 }} /><span>{v}</span>
               </div>
             ))}
