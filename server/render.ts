@@ -58,9 +58,16 @@ export async function renderTemplate(opts: {
     await renderMedia({
       ...common,
       composition: comp,
+      // Instagram/TikTok-friendly master: lossless-ish frame capture, BT.709 limited range,
+      // high bitrate so the platforms' own re-compression starts from a clean source.
       codec: 'h264',
-      crf: 18,
+      jpegQuality: 100,
+      colorSpace: 'bt709',
       pixelFormat: 'yuv420p',
+      videoBitrate: process.env.VIDEO_BITRATE || '12M',
+      x264Preset: 'slow',
+      audioCodec: 'aac',
+      audioBitrate: '192k',
       outputLocation: out,
       concurrency: CONCURRENCY,
       onProgress: ({ progress }) => opts.onProgress?.(progress),
