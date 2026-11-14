@@ -95,14 +95,18 @@ const PH_Y = 470;
 const B_SLOTS: [number, number][] = [[64, 600], [646, 790], [76, 980], [652, 1160]];
 const B_PINS: [number, number][] = [[640, 730], [450, 930], [820, 1100], [290, 880]];
 
+/** blue-sky scenery behind the phone, one per city (public/places/) */
+const SCENE: Record<string, string> = { istanbul: 'places/istanbul-sky.jpg' };
+
 const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city: string; units: UnitProps[] }> = ({ p, t, city, units }) => {
   const scr = phoneScreen(PH_W, PH_H);
   const key = slug(city);
   const wide = key === 'istanbul' ? 'maps/istanbul-wide.jpg' : CITY_MAPS[key]?.image;
   return (
     <AbsoluteFill style={{ background: '#2F6FBF', fontFamily: t.sans, color: '#fff' }}>
-      {/* clear sky: same blue as the brand's app post */}
+      {/* sky + city scenery (per city), else the brand sky gradient */}
       <AbsoluteFill style={{ background: 'linear-gradient(180deg, #2C689D 0%, #3577AC 22%, #3B87BA 46%, #4499CA 68%, #62ABD6 88%, #7DBADF 100%)' }} />
+      {SCENE[key] ? <Img src={asset(SCENE[key])} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} /> : null}
       <AbsoluteFill style={{ background: 'radial-gradient(70% 40% at 50% 100%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 70%), radial-gradient(60% 30% at 80% 8%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 70%)' }} />
       <div style={{ position: 'absolute', top: 74, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', textShadow: '0 2px 16px rgba(0,20,50,0.35)' }}>
         <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: 7, textTransform: 'uppercase', opacity: 0.88 }}>Find your stay on the map</div>
