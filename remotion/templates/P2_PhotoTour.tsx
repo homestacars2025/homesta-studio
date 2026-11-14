@@ -39,7 +39,7 @@ const factsFor = (u: UnitProps): string[] => {
   if (a.includes('wifi')) out.push('Fast Wi-Fi');
   if (a.includes('air_conditioning')) out.push('Air conditioning');
   if (u.pay_at_arrival) out.push('Pay on arrival');
-  if (a.includes('parking')) out.push('Free parking');
+  if (a.includes('parking')) out.push('Parking available');
   if (a.includes('elevator')) out.push('Elevator building');
   return out;
 };
