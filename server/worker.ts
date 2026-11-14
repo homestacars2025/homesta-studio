@@ -70,7 +70,12 @@ async function processOne(): Promise<boolean> {
     }
     props.logoReady = await logoReady(props.brand);
 
-    const slides = tpl.output === 'image' ? Number(job.params?.slides ?? tpl.default_params?.slides ?? 1) : 1;
+    let slides = tpl.output === 'image' ? Number(job.params?.slides ?? tpl.default_params?.slides ?? 1) : 1;
+    // carousels sized by the stay's photos (P2): cover + one slide per extra photo + end card
+    if (tpl.output === 'image' && tpl.default_params?.slides_from === 'photos') {
+      const max = Number(tpl.default_params?.max_slides ?? 8);
+      slides = Math.max(2, Math.min(max, (props?.unit?.photos?.length ?? 1) + 1));
+    }
     const { dir, files, thumbnail } = await renderTemplate({
       compositionId: tpl.composition_id,
       output: tpl.output,

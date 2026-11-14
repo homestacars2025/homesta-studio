@@ -20,6 +20,8 @@ export type BrandProps = {
     string
   >>;
   icon_svg?: { path: string; viewbox: string; stroke: number };
+  /** official 3D icon set: key → url (media.brand_icons) */
+  icons?: Record<string, string>;
   radius?: Record<string, number>;
   site?: string;
   handle?: string;
