@@ -71,14 +71,14 @@ const Card: React.FC<{ u: UnitProps; x: number; y: number; t: ReturnType<typeof 
       <Img src={u.photos[0]?.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
     </div>
     <div style={{ minWidth: 0, flex: 1 }}>
-      <div style={{ fontSize: 25, fontWeight: 650 as any, lineHeight: 1.18, letterSpacing: -0.3, color: t.ink, maxHeight: 60, overflow: 'hidden' }}>{niceName(u.name || u.title)}</div>
+      <div style={{ fontSize: 25, fontWeight: 600, lineHeight: 1.18, letterSpacing: -0.3, color: t.ink, maxHeight: 60, overflow: 'hidden' }}>{niceName(u.name || u.title)}</div>
       <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 10, fontSize: 20, color: '#6B6F76' }}>
         <svg width={16} height={20} viewBox="0 0 16 20"><path d="M8 19s6.5-6.1 6.5-11A6.5 6.5 0 0 0 1.5 8c0 4.9 6.5 11 6.5 11z" fill="none" stroke="#6B6F76" strokeWidth={1.8} /><circle cx={8} cy={8} r={2.3} fill="#6B6F76" /></svg>
         <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 150 }}>{u.district || city}</span>
         <div style={{ flex: 1 }} />
         {u.price_from_usd ? (
           <span style={{ color: t.ink, whiteSpace: 'nowrap' }}>
-            <b style={{ fontSize: 24 }}>${Math.round(u.price_from_usd)}</b>
+            <span style={{ fontSize: 24, fontWeight: 600 }}>${Math.round(u.price_from_usd)}</span>
             <span style={{ fontSize: 17, color: '#8C8F96' }}> /night</span>
           </span>
         ) : null}
@@ -87,44 +87,45 @@ const Card: React.FC<{ u: UnitProps; x: number; y: number; t: ReturnType<typeof 
   </div>
 );
 
-/* ── layout B: the map inside a phone, app badges below ── */
-const PH_W = 430;
-const PH_H = 820;
+/* ── layout B: big phone with the zoomed-out map over a blue-sky city photo ── */
+const PH_W = 700;
+const PH_H = 1440;
 const PH_X = (1080 - PH_W) / 2;
-const PH_Y = 292;
-const B_SLOTS: [number, number][] = [[40, 432], [612, 600], [40, 772], [612, 932]];
-const B_PINS: [number, number][] = [[560, 560], [480, 742], [680, 905], [560, 1040]];
+const PH_Y = 452;
+const B_SLOTS: [number, number][] = [[46, 540], [560, 790], [60, 990]];
+const B_PINS: [number, number][] = [[660, 680], [430, 930], [830, 1090]];
+const SKY: Record<string, string> = { istanbul: 'places/beyoglu.jpg' };
 
-const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city: string; map?: { image: string }; units: UnitProps[]; minPrice: number }> = ({ p, t, city, map, units, minPrice }) => {
+const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city: string; units: UnitProps[] }> = ({ p, t, city, units }) => {
   const scr = phoneScreen(PH_W, PH_H);
+  const key = slug(city);
+  const sky = SKY[key];
+  const wide = key === 'istanbul' ? 'maps/istanbul-wide.jpg' : CITY_MAPS[key]?.image;
   return (
-    <AbsoluteFill style={{ background: WATER, fontFamily: t.sans, color: t.ink }}>
-      <div style={{ position: 'absolute', top: 64, left: 0, right: 0, textAlign: 'center' }}>
-        <div style={{ fontSize: 56, fontWeight: 700, letterSpacing: -2, lineHeight: 1 }}>Where to stay in</div>
-        <div style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, fontSize: 104, letterSpacing: -2, lineHeight: 1.06 }}>{city}</div>
-        <div style={{ marginTop: 4, fontSize: 26, color: '#33414F' }}>
-          Hand-picked stays{Number.isFinite(minPrice) ? ` · from $${Math.round(minPrice)}/night` : ''}
-        </div>
+    <AbsoluteFill style={{ background: '#2F6FBF', fontFamily: t.sans, color: '#fff' }}>
+      {sky ? <Img src={asset(sky)} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} /> : null}
+      <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(10,40,90,0.28) 0%, rgba(10,40,90,0) 34%)' }} />
+      <div style={{ position: 'absolute', top: 70, left: 0, right: 0, textAlign: 'center', textShadow: '0 2px 18px rgba(0,30,80,0.35)' }}>
+        <div style={{ fontSize: 50, fontWeight: 500, letterSpacing: -1.4, lineHeight: 1.05 }}>Find your stay on the map in</div>
+        <div style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, fontSize: 112, letterSpacing: -2, lineHeight: 1.1 }}>{city}</div>
+        <div style={{ marginTop: 4, fontSize: 26, fontWeight: 400, opacity: 0.95 }}>Browse every area in the Homesta app</div>
       </div>
       <PhoneMockup w={PH_W} h={PH_H} style={{ left: PH_X, top: PH_Y }} screenBg="#F1F3F4">
-        {map ? <Img src={asset(map.image)} style={{ position: 'absolute', left: (scr.w - scr.h * 0.8) / 2, top: 0, height: scr.h, width: scr.h * 0.8, objectFit: 'cover' }} /> : null}
-        <div style={{ position: 'absolute', top: 92, left: 18, right: 18, height: 54, borderRadius: 999, background: '#fff', boxShadow: '0 6px 16px rgba(20,40,70,0.12)', display: 'flex', alignItems: 'center', gap: 10, padding: '0 18px', fontSize: 19, color: '#6B6F76' }}>
-          <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={t.ink} strokeWidth={2.4} strokeLinecap="round"><circle cx={11} cy={11} r={7} /><path d="M20 20l-4-4" /></svg>
-          Stays in <b style={{ color: t.ink, fontWeight: 600 }}>{city}</b>
-        </div>
+        {wide ? <Img src={asset(wide)} style={{ position: 'absolute', left: 0, top: -300, width: scr.w, height: scr.w * 2, objectFit: 'cover' }} /> : null}
       </PhoneMockup>
-      <Img src={asset('brand/3d/map-pin.png')} style={{ position: 'absolute', top: 290, right: 40, width: 200, filter: 'drop-shadow(0 18px 24px rgba(20,40,70,0.18))' }} />
-      {units.slice(0, 4).map((u, i) => <Pin key={`p${u.id}`} x={B_PINS[i][0]} y={B_PINS[i][1]} t={t} b={p.brand} />)}
-      {units.slice(0, 4).map((u, i) => <Card key={u.id} u={u} x={B_SLOTS[i][0]} y={B_SLOTS[i][1]} t={t} city={city} k={0.95} />)}
-      <div style={{ position: 'absolute', bottom: 52, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 22 }}>
-        <AppIcon size={112} primary={t.primary} />
+      {units.slice(0, 3).map((u, i) => <Pin key={`p${u.id}`} x={B_PINS[i][0]} y={B_PINS[i][1]} t={t} b={p.brand} />)}
+      {units.slice(0, 3).map((u, i) => <Card key={u.id} u={u} x={B_SLOTS[i][0]} y={B_SLOTS[i][1]} t={t} city={city} k={1} />)}
+      <Img src={asset('brand/3d/map-pin.png')} style={{ position: 'absolute', top: 720, left: 900, width: 150, transform: 'rotate(8deg)', filter: 'drop-shadow(0 14px 18px rgba(20,40,70,0.25))' }} />
+      {/* app card */}
+      <div style={{ position: 'absolute', left: 150, right: 150, bottom: 40, height: 150, borderRadius: 36, background: '#fff', boxShadow: '0 24px 50px -16px rgba(20,40,70,0.4)', display: 'flex', alignItems: 'center', gap: 20, padding: '0 26px', color: t.ink }}>
+        <AppIcon size={104} primary={t.primary} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div style={{ fontSize: 27, fontWeight: 600, letterSpacing: -0.3 }}>
-            Download the <span style={{ color: t.primary }}>Homesta</span> app
+          <div style={{ fontSize: 24, fontWeight: 500, letterSpacing: -0.2 }}>
+            Get the app · <span style={{ fontWeight: 600 }}>homestastay</span><span style={{ fontWeight: 300 }}>.com</span>
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
-            <AppStoreBadge height={54} />
-            <GooglePlayBadge height={54} />
+            <AppStoreBadge height={52} />
+            <GooglePlayBadge height={52} />
           </div>
         </div>
       </div>
@@ -138,7 +139,7 @@ export const P2_StaysMap: React.FC<StudioProps> = (p) => {
   const map = CITY_MAPS[slug(city)];
   const units = (p.units ?? []).slice(0, 6);
   const minPrice = Math.min(...units.map((u) => u.price_from_usd ?? Infinity));
-  if ((p.params?.layout as string) === 'phone') return <PhoneLayout p={p} t={t} city={city} map={map} units={units} minPrice={minPrice} />;
+  if ((p.params?.layout as string) === 'phone') return <PhoneLayout p={p} t={t} city={city} units={units} />;
 
   return (
     <AbsoluteFill style={{ background: WATER, fontFamily: t.sans, color: t.ink }}>
@@ -161,7 +162,7 @@ export const P2_StaysMap: React.FC<StudioProps> = (p) => {
       {units.map((u, i) => <Card key={u.id} u={u} x={SLOTS[i][0]} y={SLOTS[i][1] - 6} t={t} city={city} />)}
 
       <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, textAlign: 'center', fontSize: 34, letterSpacing: -0.4, color: t.ink }}>
-        <span style={{ fontWeight: 700 }}>{t.site.replace(/\.com$/, '')}</span>
+        <span style={{ fontWeight: 500 }}>{t.site.replace(/\.com$/, '')}</span>
         <span style={{ fontWeight: 300 }}>.com</span>
       </div>
     </AbsoluteFill>
