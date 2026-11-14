@@ -92,8 +92,16 @@ const PH_W = 700;
 const PH_H = 1440;
 const PH_X = (1080 - PH_W) / 2;
 const PH_Y = 470;
-const B_SLOTS: [number, number][] = [[64, 600], [646, 790], [76, 980], [652, 1160]];
-const B_PINS: [number, number][] = [[640, 730], [450, 930], [820, 1100], [290, 880]];
+const B_SLOTS: [number, number][] = [[64, 650], [646, 800], [76, 990], [652, 1170]];
+const SCR_X = PH_X + 19;
+const SCR_Y = PH_Y + 19;
+const B_PINS: [number, number][] = [[284, 300], [356, 398], [478, 505], [404, 648]].map(([x, y]) => [SCR_X + x, SCR_Y + y]) as [number, number][];
+/** app-map labels inside the phone (screen px) */
+const APP_LABELS: { n: string; x: number; y: number; water?: boolean }[] = [
+  { n: 'Bosphorus', x: 470, y: 250, water: true }, { n: 'Golden Horn', x: 196, y: 470, water: true }, { n: 'Sea of Marmara', x: 250, y: 720, water: true },
+  { n: 'Şişli', x: 290, y: 238 }, { n: 'Beşiktaş', x: 372, y: 330 }, { n: 'Beyoğlu', x: 252, y: 405 }, { n: 'Fatih', x: 120, y: 560 },
+  { n: 'Üsküdar', x: 560, y: 470 }, { n: 'Kadıköy', x: 520, y: 640 }, { n: 'Kağıthane', x: 236, y: 170 },
+];
 
 /** blue-sky scenery behind the phone, one per city (public/places/) */
 const SCENE: Record<string, string> = { istanbul: 'places/istanbul-sky.jpg' };
@@ -101,7 +109,7 @@ const SCENE: Record<string, string> = { istanbul: 'places/istanbul-sky.jpg' };
 const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city: string; units: UnitProps[] }> = ({ p, t, city, units }) => {
   const scr = phoneScreen(PH_W, PH_H);
   const key = slug(city);
-  const wide = key === 'istanbul' ? 'maps/istanbul-wide.jpg' : CITY_MAPS[key]?.image;
+  const wide = key === 'istanbul' ? 'maps/istanbul-app.jpg' : CITY_MAPS[key]?.image;
   return (
     <AbsoluteFill style={{ background: '#2F6FBF', fontFamily: t.sans, color: '#fff' }}>
       {/* sky + city scenery (per city), else the brand sky gradient */}
@@ -116,14 +124,35 @@ const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city:
         </div>
         <div style={{ marginTop: 18, fontSize: 25, fontWeight: 300, letterSpacing: 0.2, opacity: 0.95 }}>Browse every neighbourhood in the Homesta app</div>
         <div style={{ marginTop: 26, display: 'flex', alignItems: 'center', gap: 12, textShadow: 'none' }}>
-          <AppIcon size={70} primary={t.primary} />
-          <div style={{ width: 1, height: 40, background: 'rgba(255,255,255,0.35)', margin: '0 6px' }} />
-          <AppStoreBadge height={38} />
-          <GooglePlayBadge height={38} />
+          <AppIcon size={96} primary={t.primary} />
+          <div style={{ width: 1, height: 56, background: 'rgba(255,255,255,0.4)', margin: '0 8px' }} />
+          <AppStoreBadge height={56} />
+          <GooglePlayBadge height={56} />
         </div>
       </div>
       <PhoneMockup w={PH_W} h={PH_H} style={{ left: PH_X, top: PH_Y }} screenBg="#F1F3F4">
-        {wide ? <Img src={asset(wide)} style={{ position: 'absolute', left: 0, top: -300, width: scr.w, height: scr.w * 2, objectFit: 'cover' }} /> : null}
+        {wide ? <Img src={asset(wide)} style={{ position: 'absolute', left: 0, top: 0, width: scr.w, height: (scr.w * 880) / 662, objectFit: 'cover' }} /> : null}
+        {key === 'istanbul' && APP_LABELS.map((l) => (
+          <div key={l.n} style={{ position: 'absolute', left: l.x - 110, top: l.y - 12, width: 220, textAlign: 'center', fontSize: l.water ? 17 : 15, fontWeight: l.water ? 500 : 600, letterSpacing: l.water ? 0.4 : 1.2, textTransform: l.water ? 'none' : 'uppercase', color: l.water ? '#4F86B8' : '#7A7F86', textShadow: l.water ? 'none' : '0 0 4px #F4F3F0, 0 0 4px #F4F3F0' }}>{l.n}</div>
+        ))}
+        {/* you-are-here dot */}
+        <div style={{ position: 'absolute', left: 318 - 30, top: 352 - 30, width: 60, height: 60, borderRadius: 999, background: 'rgba(52,120,246,0.16)' }} />
+        <div style={{ position: 'absolute', left: 318 - 11, top: 352 - 11, width: 22, height: 22, borderRadius: 999, background: '#3478F6', border: '4px solid #fff', boxShadow: '0 2px 6px rgba(0,0,0,0.25)' }} />
+        {/* price markers for more stays */}
+        {units.slice(4, 6).map((u, i) => (
+          <div key={u.id} style={{ position: 'absolute', left: [96, 548][i], top: [330, 560][i], height: 40, padding: '0 14px', borderRadius: 999, background: '#fff', boxShadow: '0 4px 12px rgba(20,40,70,0.22)', display: 'flex', alignItems: 'center', fontSize: 19, fontWeight: 600, color: t.ink }}>
+            ${Math.round(u.price_from_usd ?? 0)}
+          </div>
+        ))}
+        {/* app search bar */}
+        <div style={{ position: 'absolute', top: 90, left: 22, right: 22, height: 58, borderRadius: 999, background: '#fff', boxShadow: '0 6px 18px rgba(20,40,70,0.16)', display: 'flex', alignItems: 'center', gap: 12, padding: '0 8px 0 20px', fontSize: 19, color: '#6B6F76' }}>
+          <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={t.ink} strokeWidth={2.4} strokeLinecap="round"><circle cx={11} cy={11} r={7} /><path d="M20 20l-4-4" /></svg>
+          <span><span style={{ color: t.ink, fontWeight: 600 }}>{city}</span> · Any week · 2 guests</span>
+          <div style={{ flex: 1 }} />
+          <div style={{ width: 42, height: 42, borderRadius: 999, border: '1.5px solid #E3E3E3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={t.ink} strokeWidth={2.2} strokeLinecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" /><circle cx={16} cy={7} r={2} /><circle cx={10} cy={17} r={2} /></svg>
+          </div>
+        </div>
       </PhoneMockup>
       {units.slice(0, 4).map((u, i) => <Pin key={`p${u.id}`} x={B_PINS[i][0]} y={B_PINS[i][1]} t={t} b={p.brand} />)}
       {units.slice(0, 4).map((u, i) => <Card key={u.id} u={u} x={B_SLOTS[i][0]} y={B_SLOTS[i][1]} t={t} city={city} k={0.78} />)}
