@@ -14,7 +14,7 @@ import { S6_ThisOrThat, S6_FRAMES } from './templates/S6_ThisOrThat';
 import sampleS6 from '../test/sample-s6.json';
 import { S4_InsideTheStay, S4_FRAMES } from './templates/S4_InsideTheStay';
 import sampleS4 from '../test/sample-s4.json';
-import { P2_PhotoTour, P2_MAX_SLIDES } from './templates/P2_PhotoTour';
+import { P2_StaysMap } from './templates/P2_StaysMap';
 import sample from '../test/sample-s3.json';
 
 /**
@@ -76,16 +76,13 @@ export const Root: React.FC = () => (
       height={1920}
       defaultProps={sample as unknown as StudioProps}
     />
-    {Array.from({ length: P2_MAX_SLIDES }, (_, i) => (
-      <Still
-        key={`p2-${i}`}
-        id={`P2-PhotoTour-S${i + 1}`}
-        component={P2_PhotoTour as React.FC<any>}
-        width={1080}
-        height={1350}
-        defaultProps={{ ...(sampleS4 as unknown as StudioProps), slide: i + 1 }}
-      />
-    ))}
+    <Still
+      id="P2-StaysMap"
+      component={P2_StaysMap as React.FC<any>}
+      width={1080}
+      height={1350}
+      defaultProps={sampleS2 as unknown as StudioProps}
+    />
     {Array.from({ length: P1_SLIDES }, (_, i) => (
       <Still
         key={i}
