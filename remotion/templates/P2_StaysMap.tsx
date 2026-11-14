@@ -98,12 +98,12 @@ const B_PINS: [number, number][] = [[640, 730], [450, 930], [820, 1100], [290, 8
 const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city: string; units: UnitProps[] }> = ({ p, t, city, units }) => {
   const scr = phoneScreen(PH_W, PH_H);
   const key = slug(city);
-  const bg = (p.city as any)?.images?.[0] ?? p.city?.image ?? units[0]?.photos[0]?.url;
   const wide = key === 'istanbul' ? 'maps/istanbul-wide.jpg' : CITY_MAPS[key]?.image;
   return (
     <AbsoluteFill style={{ background: '#2F6FBF', fontFamily: t.sans, color: '#fff' }}>
-      {bg ? <Img src={bg} style={{ position: 'absolute', inset: -80, width: 'calc(100% + 160px)', height: 'calc(100% + 160px)', objectFit: 'cover', filter: 'blur(14px) saturate(1.08)' }} /> : null}
-      <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(8,20,40,0.46) 0%, rgba(8,20,40,0.14) 36%, rgba(8,20,40,0) 60%)' }} />
+      {/* clear sky: same blue as the brand's app post */}
+      <AbsoluteFill style={{ background: 'linear-gradient(180deg, #2C689D 0%, #3577AC 22%, #3B87BA 46%, #4499CA 68%, #62ABD6 88%, #7DBADF 100%)' }} />
+      <AbsoluteFill style={{ background: 'radial-gradient(70% 40% at 50% 100%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 70%), radial-gradient(60% 30% at 80% 8%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 70%)' }} />
       <div style={{ position: 'absolute', top: 74, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', textShadow: '0 2px 16px rgba(0,20,50,0.35)' }}>
         <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: 7, textTransform: 'uppercase', opacity: 0.88 }}>Find your stay on the map</div>
         <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 14 }}>
