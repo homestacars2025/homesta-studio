@@ -91,9 +91,9 @@ const Card: React.FC<{ u: UnitProps; x: number; y: number; t: ReturnType<typeof 
 const PH_W = 700;
 const PH_H = 1440;
 const PH_X = (1080 - PH_W) / 2;
-const PH_Y = 452;
-const B_SLOTS: [number, number][] = [[46, 540], [560, 790], [60, 990]];
-const B_PINS: [number, number][] = [[660, 680], [430, 930], [830, 1090]];
+const PH_Y = 470;
+const B_SLOTS: [number, number][] = [[70, 590], [640, 820], [84, 1060]];
+const B_PINS: [number, number][] = [[640, 720], [450, 990], [820, 1200]];
 const SKY: Record<string, string> = { istanbul: 'places/beyoglu.jpg' };
 
 const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city: string; units: UnitProps[] }> = ({ p, t, city, units }) => {
@@ -107,28 +107,22 @@ const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city:
       <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(10,40,90,0.28) 0%, rgba(10,40,90,0) 34%)' }} />
       <div style={{ position: 'absolute', top: 70, left: 0, right: 0, textAlign: 'center', textShadow: '0 2px 18px rgba(0,30,80,0.35)' }}>
         <div style={{ fontSize: 50, fontWeight: 500, letterSpacing: -1.4, lineHeight: 1.05 }}>Find your stay on the map in</div>
-        <div style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, fontSize: 112, letterSpacing: -2, lineHeight: 1.1 }}>{city}</div>
-        <div style={{ marginTop: 4, fontSize: 26, fontWeight: 400, opacity: 0.95 }}>Browse every area in the Homesta app</div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, fontSize: 112, letterSpacing: -2, lineHeight: 1.1 }}>{city}</span>
+          <Img src={asset('brand/3d/map-pin.png')} style={{ width: 120, marginTop: -10, filter: 'drop-shadow(0 10px 14px rgba(0,30,80,0.3))' }} />
+        </div>
+        <div style={{ marginTop: 0, fontSize: 26, fontWeight: 400, opacity: 0.95 }}>Browse every area in the Homesta app</div>
+        <div style={{ marginTop: 22, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 14, textShadow: 'none' }}>
+          <AppIcon size={74} primary={t.primary} />
+          <AppStoreBadge height={38} />
+          <GooglePlayBadge height={38} />
+        </div>
       </div>
       <PhoneMockup w={PH_W} h={PH_H} style={{ left: PH_X, top: PH_Y }} screenBg="#F1F3F4">
         {wide ? <Img src={asset(wide)} style={{ position: 'absolute', left: 0, top: -300, width: scr.w, height: scr.w * 2, objectFit: 'cover' }} /> : null}
       </PhoneMockup>
       {units.slice(0, 3).map((u, i) => <Pin key={`p${u.id}`} x={B_PINS[i][0]} y={B_PINS[i][1]} t={t} b={p.brand} />)}
-      {units.slice(0, 3).map((u, i) => <Card key={u.id} u={u} x={B_SLOTS[i][0]} y={B_SLOTS[i][1]} t={t} city={city} k={1} />)}
-      <Img src={asset('brand/3d/map-pin.png')} style={{ position: 'absolute', top: 720, left: 900, width: 150, transform: 'rotate(8deg)', filter: 'drop-shadow(0 14px 18px rgba(20,40,70,0.25))' }} />
-      {/* app card */}
-      <div style={{ position: 'absolute', left: 150, right: 150, bottom: 40, height: 150, borderRadius: 36, background: '#fff', boxShadow: '0 24px 50px -16px rgba(20,40,70,0.4)', display: 'flex', alignItems: 'center', gap: 20, padding: '0 26px', color: t.ink }}>
-        <AppIcon size={104} primary={t.primary} />
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div style={{ fontSize: 24, fontWeight: 500, letterSpacing: -0.2 }}>
-            Get the app · <span style={{ fontWeight: 600 }}>homestastay</span><span style={{ fontWeight: 300 }}>.com</span>
-          </div>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <AppStoreBadge height={52} />
-            <GooglePlayBadge height={52} />
-          </div>
-        </div>
-      </div>
+      {units.slice(0, 3).map((u, i) => <Card key={u.id} u={u} x={B_SLOTS[i][0]} y={B_SLOTS[i][1]} t={t} city={city} k={0.78} />)}
     </AbsoluteFill>
   );
 };
