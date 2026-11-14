@@ -93,7 +93,7 @@ const PH_H = 1440;
 const PH_X = (1080 - PH_W) / 2;
 const PH_Y = 470;
 const B_SLOTS: [number, number][] = [[64, 600], [646, 790], [76, 980], [652, 1160]];
-const B_PINS: [number, number][] = [[640, 730], [450, 930], [820, 1100], [440, 1270]];
+const B_PINS: [number, number][] = [[640, 730], [450, 930], [820, 1100], [290, 880]];
 
 const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city: string; units: UnitProps[] }> = ({ p, t, city, units }) => {
   const scr = phoneScreen(PH_W, PH_H);
