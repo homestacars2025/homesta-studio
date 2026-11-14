@@ -92,8 +92,8 @@ const PH_W = 700;
 const PH_H = 1440;
 const PH_X = (1080 - PH_W) / 2;
 const PH_Y = 470;
-const B_SLOTS: [number, number][] = [[70, 590], [640, 820], [84, 1060]];
-const B_PINS: [number, number][] = [[640, 720], [450, 990], [820, 1200]];
+const B_SLOTS: [number, number][] = [[64, 600], [646, 790], [76, 980], [652, 1160]];
+const B_PINS: [number, number][] = [[640, 730], [450, 930], [820, 1100], [440, 1270]];
 
 const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city: string; units: UnitProps[] }> = ({ p, t, city, units }) => {
   const scr = phoneScreen(PH_W, PH_H);
@@ -102,17 +102,18 @@ const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city:
   const wide = key === 'istanbul' ? 'maps/istanbul-wide.jpg' : CITY_MAPS[key]?.image;
   return (
     <AbsoluteFill style={{ background: '#2F6FBF', fontFamily: t.sans, color: '#fff' }}>
-      {bg ? <Img src={bg} style={{ position: 'absolute', inset: -80, width: 'calc(100% + 160px)', height: 'calc(100% + 160px)', objectFit: 'cover', filter: 'blur(42px) saturate(1.1)' }} /> : null}
-      <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(8,20,40,0.42) 0%, rgba(8,20,40,0.18) 40%, rgba(8,20,40,0.08) 100%)' }} />
-      <div style={{ position: 'absolute', top: 70, left: 0, right: 0, textAlign: 'center', textShadow: '0 2px 18px rgba(0,30,80,0.35)' }}>
-        <div style={{ fontSize: 50, fontWeight: 500, letterSpacing: -1.4, lineHeight: 1.05 }}>Find your stay on the map in</div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, fontSize: 112, letterSpacing: -2, lineHeight: 1.1 }}>{city}</span>
-          <Img src={asset('brand/3d/map-pin.png')} style={{ width: 120, marginTop: -10, filter: 'drop-shadow(0 10px 14px rgba(0,30,80,0.3))' }} />
+      {bg ? <Img src={bg} style={{ position: 'absolute', inset: -80, width: 'calc(100% + 160px)', height: 'calc(100% + 160px)', objectFit: 'cover', filter: 'blur(14px) saturate(1.08)' }} /> : null}
+      <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(8,20,40,0.46) 0%, rgba(8,20,40,0.14) 36%, rgba(8,20,40,0) 60%)' }} />
+      <div style={{ position: 'absolute', top: 74, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', textShadow: '0 2px 16px rgba(0,20,50,0.35)' }}>
+        <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: 7, textTransform: 'uppercase', opacity: 0.88 }}>Find your stay on the map</div>
+        <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 14 }}>
+          <span style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, fontSize: 132, letterSpacing: -3, lineHeight: 0.95 }}>{city}</span>
+          <Img src={asset('brand/3d/map-pin.png')} style={{ width: 118, marginTop: 6, filter: 'drop-shadow(0 10px 14px rgba(0,30,80,0.3))' }} />
         </div>
-        <div style={{ marginTop: 0, fontSize: 26, fontWeight: 400, opacity: 0.95 }}>Browse every area in the Homesta app</div>
-        <div style={{ marginTop: 22, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 14, textShadow: 'none' }}>
-          <AppIcon size={74} primary={t.primary} />
+        <div style={{ marginTop: 18, fontSize: 25, fontWeight: 300, letterSpacing: 0.2, opacity: 0.95 }}>Browse every neighbourhood in the Homesta app</div>
+        <div style={{ marginTop: 26, display: 'flex', alignItems: 'center', gap: 12, textShadow: 'none' }}>
+          <AppIcon size={70} primary={t.primary} />
+          <div style={{ width: 1, height: 40, background: 'rgba(255,255,255,0.35)', margin: '0 6px' }} />
           <AppStoreBadge height={38} />
           <GooglePlayBadge height={38} />
         </div>
@@ -120,8 +121,8 @@ const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city:
       <PhoneMockup w={PH_W} h={PH_H} style={{ left: PH_X, top: PH_Y }} screenBg="#F1F3F4">
         {wide ? <Img src={asset(wide)} style={{ position: 'absolute', left: 0, top: -300, width: scr.w, height: scr.w * 2, objectFit: 'cover' }} /> : null}
       </PhoneMockup>
-      {units.slice(0, 3).map((u, i) => <Pin key={`p${u.id}`} x={B_PINS[i][0]} y={B_PINS[i][1]} t={t} b={p.brand} />)}
-      {units.slice(0, 3).map((u, i) => <Card key={u.id} u={u} x={B_SLOTS[i][0]} y={B_SLOTS[i][1]} t={t} city={city} k={0.78} />)}
+      {units.slice(0, 4).map((u, i) => <Pin key={`p${u.id}`} x={B_PINS[i][0]} y={B_PINS[i][1]} t={t} b={p.brand} />)}
+      {units.slice(0, 4).map((u, i) => <Card key={u.id} u={u} x={B_SLOTS[i][0]} y={B_SLOTS[i][1]} t={t} city={city} k={0.78} />)}
     </AbsoluteFill>
   );
 };
