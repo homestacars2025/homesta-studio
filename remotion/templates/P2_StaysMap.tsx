@@ -94,17 +94,16 @@ const PH_X = (1080 - PH_W) / 2;
 const PH_Y = 470;
 const B_SLOTS: [number, number][] = [[70, 590], [640, 820], [84, 1060]];
 const B_PINS: [number, number][] = [[640, 720], [450, 990], [820, 1200]];
-const SKY: Record<string, string> = { istanbul: 'places/beyoglu.jpg' };
 
 const PhoneLayout: React.FC<{ p: StudioProps; t: ReturnType<typeof theme>; city: string; units: UnitProps[] }> = ({ p, t, city, units }) => {
   const scr = phoneScreen(PH_W, PH_H);
   const key = slug(city);
-  const sky = SKY[key];
+  const bg = (p.city as any)?.images?.[0] ?? p.city?.image ?? units[0]?.photos[0]?.url;
   const wide = key === 'istanbul' ? 'maps/istanbul-wide.jpg' : CITY_MAPS[key]?.image;
   return (
     <AbsoluteFill style={{ background: '#2F6FBF', fontFamily: t.sans, color: '#fff' }}>
-      {sky ? <Img src={asset(sky)} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} /> : null}
-      <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(10,40,90,0.28) 0%, rgba(10,40,90,0) 34%)' }} />
+      {bg ? <Img src={bg} style={{ position: 'absolute', inset: -80, width: 'calc(100% + 160px)', height: 'calc(100% + 160px)', objectFit: 'cover', filter: 'blur(42px) saturate(1.1)' }} /> : null}
+      <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(8,20,40,0.42) 0%, rgba(8,20,40,0.18) 40%, rgba(8,20,40,0.08) 100%)' }} />
       <div style={{ position: 'absolute', top: 70, left: 0, right: 0, textAlign: 'center', textShadow: '0 2px 18px rgba(0,30,80,0.35)' }}>
         <div style={{ fontSize: 50, fontWeight: 500, letterSpacing: -1.4, lineHeight: 1.05 }}>Find your stay on the map in</div>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12 }}>
