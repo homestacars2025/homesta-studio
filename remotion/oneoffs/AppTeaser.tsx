@@ -42,7 +42,7 @@ const LINES: [number, number, string][] = [
 ];
 
 const ICON_PAIRS: [string, string][] = [
-  ['suitcase', 'beach'], ['cabin', 'blueprint'], ['bell', 'gift'], ['van', 'suitcase'], ['train', 'basket'],
+  ['suitcase', 'beach'], ['cabin', 'blueprint'], ['bell', 'gift'], ['van', 'suitcase'], ['train', ''],
 ];
 const END_ICONS: [string, number, number, number, number][] = [
   ['beach', 40, 150, 210, -8], ['suitcase', 850, 120, 170, 10], ['cabin', 20, 1390, 230, -6],
@@ -167,7 +167,7 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
             return (
               <React.Fragment key={i}>
                 <Img src={asset(`brand/3d/app/${l}.png`)} style={{ position: 'absolute', left: 30, top: 1130 + Math.sin(f / 15) * 10, width: 250, filter: glow, opacity: out * Math.min(1, inL * 1.4), transform: `translateX(${(1 - inL) * -120}px) scale(${(0.5 + 0.5 * inL) * (0.85 + 0.15 * out)}) rotate(${(1 - inL) * -20 - 6}deg)` }} />
-                <Img src={asset(`brand/3d/app/${r}.png`)} style={{ position: 'absolute', left: 790, top: 600 + Math.sin(f / 18 + 1) * 10, width: 250, filter: glow, opacity: out * Math.min(1, inR * 1.4), transform: `translateX(${(1 - inR) * 120}px) scale(${(0.5 + 0.5 * inR) * (0.85 + 0.15 * out)}) rotate(${(1 - inR) * 20 + 6}deg)` }} />
+                {r && <Img src={asset(`brand/3d/app/${r}.png`)} style={{ position: 'absolute', left: 790, top: 600 + Math.sin(f / 18 + 1) * 10, width: 250, filter: glow, opacity: out * Math.min(1, inR * 1.4), transform: `translateX(${(1 - inR) * 120}px) scale(${(0.5 + 0.5 * inR) * (0.85 + 0.15 * out)}) rotate(${(1 - inR) * 20 + 6}deg)` }} />}
               </React.Fragment>
             );
           })}
@@ -203,7 +203,7 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
       )}
 
       {/* D · icons drift around the end card */}
-      {f >= 400 && END_ICONS.map(([n, x, y, w, r], i) => {
+      {false && END_ICONS.map(([n, x, y, w, r], i) => {
         const k = spring({ frame: f - 404 - i * 3, fps, config: { damping: 13, stiffness: 120 } });
         return (
           <Img key={n} src={asset(`brand/3d/app/${n}.png`)} style={{ position: 'absolute', left: x, top: y + Math.sin(f / (14 + i * 2) + i) * 12, width: w, opacity: Math.min(1, k * 1.4) * 0.95, filter: 'drop-shadow(0 20px 26px rgba(0,0,0,0.6))', transform: `scale(${0.4 + 0.6 * k}) rotate(${r + Math.sin(f / 30 + i) * 3}deg)` }} />
