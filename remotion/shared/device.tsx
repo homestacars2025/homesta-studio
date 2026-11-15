@@ -6,9 +6,9 @@ import React from 'react';
  */
 export const PHONE_FRAME = 7;   // titanium band
 export const PHONE_BEZEL = 12;  // black glass border
-export const phoneScreen = (w: number, h: number) => ({
-  w: w - (PHONE_FRAME + PHONE_BEZEL) * 2,
-  h: h - (PHONE_FRAME + PHONE_BEZEL) * 2,
+export const phoneScreen = (w: number, h: number, frame = PHONE_FRAME, bezel = PHONE_BEZEL) => ({
+  w: w - (frame + bezel) * 2,
+  h: h - (frame + bezel) * 2,
 });
 
 const metal = 'linear-gradient(145deg, #E4E5E9 0%, #9A9DA4 18%, #F1F2F4 40%, #7F828A 62%, #D2D4D8 82%, #8C8F96 100%)';
@@ -20,10 +20,10 @@ const btn = (side: 'l' | 'r', top: number, h: number): React.CSSProperties => ({
 });
 
 export const PhoneMockup: React.FC<{
-  w: number; h: number; ink?: string; screenBg?: string; barBg?: string; style?: React.CSSProperties; children: React.ReactNode;
-}> = ({ w, h, ink = '#0E0E10', screenBg = '#FFFFFF', barBg, style, children }) => {
+  w: number; h: number; ink?: string; screenBg?: string; barBg?: string; frame?: number; bezel?: number; style?: React.CSSProperties; children: React.ReactNode;
+}> = ({ w, h, ink = '#0E0E10', screenBg = '#FFFFFF', barBg, frame = PHONE_FRAME, bezel = PHONE_BEZEL, style, children }) => {
   const R = w * 0.165;                      // outer corner radius (iPhone proportion)
-  const s = phoneScreen(w, h);
+  const s = phoneScreen(w, h, frame, bezel);
   return (
     <div style={{ position: 'absolute', width: w, height: h, ...style }}>
       {/* contact + ambient shadow */}
@@ -34,11 +34,11 @@ export const PhoneMockup: React.FC<{
       <div style={btn('l', h * 0.34, h * 0.075)} />
       <div style={btn('r', h * 0.27, h * 0.11)} />
       {/* titanium frame */}
-      <div style={{ position: 'absolute', inset: 0, borderRadius: R, background: metal, padding: PHONE_FRAME }}>
+      <div style={{ position: 'absolute', inset: 0, borderRadius: R, background: metal, padding: frame }}>
         {/* black glass bezel */}
-        <div style={{ width: '100%', height: '100%', borderRadius: R - PHONE_FRAME, background: '#050506', padding: PHONE_BEZEL, boxShadow: 'inset 0 0 0 1.5px rgba(255,255,255,0.08)' }}>
+        <div style={{ width: '100%', height: '100%', borderRadius: R - frame, background: '#050506', padding: bezel, boxShadow: 'inset 0 0 0 1.5px rgba(255,255,255,0.08)' }}>
           {/* screen */}
-          <div style={{ position: 'relative', width: s.w, height: s.h, borderRadius: R - PHONE_FRAME - PHONE_BEZEL, overflow: 'hidden', background: screenBg }}>
+          <div style={{ position: 'relative', width: s.w, height: s.h, borderRadius: R - frame - bezel, overflow: 'hidden', background: screenBg }}>
             {children}
             {/* status bar */}
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 78, background: barBg ?? screenBg }} />

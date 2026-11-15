@@ -20,7 +20,9 @@ const rv = (f: number, a: number, dur = 18) => interpolate(f, [a, a + dur], [0, 
 const win = (f: number, a: number, b: number, fade = 10) => interpolate(f, [a, a + fade, b - fade, b], [0, 1, 1, 0], cl);
 
 const PH_W = 600;
-const SCR = phoneScreen(PH_W, 0);
+const FR = 6;
+const BZ = 6;
+const SCR = phoneScreen(PH_W, 0, FR, BZ);
 const SCR_H = Math.round((SCR.w * 2796) / 1290);
 const PH_H = SCR_H + (PH_W - SCR.w);
 
@@ -37,6 +39,14 @@ const LINES: [number, number, string][] = [
   [210, 250, 'Book now, pay when you arrive'],
   [250, 290, 'Your car, ready on arrival'],
   [290, 336, 'Rent a car, delivered to you'],
+];
+
+const ICON_PAIRS: [string, string][] = [
+  ['suitcase', 'beach'], ['cabin', 'blueprint'], ['bell', 'gift'], ['van', 'suitcase'], ['train', 'basket'],
+];
+const END_ICONS: [string, number, number, number, number][] = [
+  ['beach', 40, 150, 210, -8], ['suitcase', 850, 120, 170, 10], ['cabin', 20, 1390, 230, -6],
+  ['gift', 860, 1360, 180, 8], ['bell', 120, 1660, 170, 4], ['train', 800, 1640, 190, -6],
 ];
 
 const Words: React.FC<{ text: string; f: number; at: number; size: number; weight?: number; color?: string }> = ({ text, f, at, size, weight = 300, color = '#fff' }) => (
@@ -127,26 +137,40 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
               transform: `translateY(${(1 - phone) * 1300 + phoneOut * 1400}px) rotateY(${ry}deg) rotateX(${rx}deg) rotateZ(${(1 - phone) * 8}deg)`,
               transformStyle: 'preserve-3d',
             }}>
-              <PhoneMockup w={PH_W} h={PH_H} barBg={[...SCREENS].reverse().find((x) => local >= x.at + 7)?.bar ?? '#FFFFFF'} style={{ left: 0, top: 0 }}>
+              <PhoneMockup w={PH_W} h={PH_H} frame={FR} bezel={BZ} barBg={[...SCREENS].reverse().find((x) => local >= x.at + 7)?.bar ?? '#FFFFFF'} style={{ left: 0, top: 0 }}>
                 {SCREENS.map((s, i) => {
                   const next = SCREENS[i + 1];
                   const inK = i === 0 ? 1 : rv(local, s.at, 14);
                   const outK = next ? rv(local, next.at, 14) : 0;
-                  const sc = interpolate(local, [s.at, (next?.at ?? 210)], [0, s.scroll], { easing: easeInOut, ...cl });
+                  const zoom = interpolate(local, [s.at, (next?.at ?? 210)], [1, 1.035], cl);
                   return (
                     <div key={s.src} style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#fff', transform: `translateX(${(1 - inK) * SCR.w - outK * SCR.w * 0.3}px)`, boxShadow: i ? '-20px 0 40px rgba(0,0,0,0.15)' : undefined }}>
-                      <Img src={`http://localhost:3000/public/_preview/${s.src}`} style={{ position: 'absolute', left: 0, top: -sc, width: SCR.w, height: SCR_H }} />
+                      <Img src={`http://localhost:3000/public/_preview/${s.src}`} style={{ position: 'absolute', left: 0, top: 0, width: SCR.w, height: SCR_H, transform: `scale(${zoom})`, transformOrigin: '50% 30%' }} />
                     </div>
                   );
                 })}
               </PhoneMockup>
+              {/* rim light so the silhouette reads on the dark stage */}
+              <div style={{ position: 'absolute', inset: -1, borderRadius: PH_W * 0.165, boxShadow: `0 0 0 1.5px rgba(255,255,255,0.35), 0 0 80px -10px ${t.primary}88, 0 60px 120px -30px rgba(0,0,0,0.9)`, pointerEvents: 'none' }} />
               {/* glass sheen following the tilt */}
               <div style={{ position: 'absolute', inset: 0, borderRadius: PH_W * 0.165, background: `linear-gradient(${110 + ry * 2}deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.10) 48%, rgba(255,255,255,0) 60%)`, pointerEvents: 'none' }} />
             </div>
           </div>
-          {/* floating 3D props */}
-          <Img src={asset('brand/3d/map-pin.png')} style={{ position: 'absolute', left: 56, top: 1040 + Math.sin(f / 16) * 10, width: 190, opacity: rv(f, 160, 16), transform: `scale(${0.6 + 0.4 * rv(f, 160, 16)}) rotate(-10deg) translateY(${phoneOut * 900}px)` }} />
-          <Img src={asset('brand/3d/plane.png')} style={{ position: 'absolute', left: 790, top: 600 + Math.sin(f / 20) * 12, width: 260, opacity: rv(f, 170, 16), transform: `translateX(${(1 - rv(f, 170, 24)) * 300}px) translateY(${phoneOut * 900}px)` }} />
+          {/* the app's own 3D icons, a pair per message */}
+          {LINES.map(([la, lb], i) => {
+            const [l, r] = ICON_PAIRS[i];
+            const inL = spring({ frame: f - la, fps, config: { damping: 12, stiffness: 140 } });
+            const inR = spring({ frame: f - la - 5, fps, config: { damping: 12, stiffness: 140 } });
+            const out = interpolate(f, [lb - 6, lb + 2], [1, 0], cl);
+            if (f < la - 1 || f > lb + 3) return null;
+            const glow = 'drop-shadow(0 24px 30px rgba(0,0,0,0.55)) drop-shadow(0 0 22px rgba(255,255,255,0.10))';
+            return (
+              <React.Fragment key={i}>
+                <Img src={asset(`brand/3d/app/${l}.png`)} style={{ position: 'absolute', left: 30, top: 1130 + Math.sin(f / 15) * 10, width: 250, filter: glow, opacity: out * Math.min(1, inL * 1.4), transform: `translateX(${(1 - inL) * -120}px) scale(${(0.5 + 0.5 * inL) * (0.85 + 0.15 * out)}) rotate(${(1 - inL) * -20 - 6}deg)` }} />
+                <Img src={asset(`brand/3d/app/${r}.png`)} style={{ position: 'absolute', left: 790, top: 600 + Math.sin(f / 18 + 1) * 10, width: 250, filter: glow, opacity: out * Math.min(1, inR * 1.4), transform: `translateX(${(1 - inR) * 120}px) scale(${(0.5 + 0.5 * inR) * (0.85 + 0.15 * out)}) rotate(${(1 - inR) * 20 + 6}deg)` }} />
+              </React.Fragment>
+            );
+          })}
         </>
       )}
 
@@ -177,6 +201,14 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
           })}
         </div>
       )}
+
+      {/* D · icons drift around the end card */}
+      {f >= 400 && END_ICONS.map(([n, x, y, w, r], i) => {
+        const k = spring({ frame: f - 404 - i * 3, fps, config: { damping: 13, stiffness: 120 } });
+        return (
+          <Img key={n} src={asset(`brand/3d/app/${n}.png`)} style={{ position: 'absolute', left: x, top: y + Math.sin(f / (14 + i * 2) + i) * 12, width: w, opacity: Math.min(1, k * 1.4) * 0.95, filter: 'drop-shadow(0 20px 26px rgba(0,0,0,0.6))', transform: `scale(${0.4 + 0.6 * k}) rotate(${r + Math.sin(f / 30 + i) * 3}deg)` }} />
+        );
+      })}
 
       {/* D · coming soon */}
       {f >= 400 && (
