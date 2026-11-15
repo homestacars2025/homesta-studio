@@ -1,5 +1,5 @@
 /**
- * One-off · Homesta app teaser ("Coming soon") — story 9:16, 14s @ 30fps.
+ * One-off · Homesta app teaser ("Coming soon") — story 9:16, 16s @ 30fps.
  * Keynote-style reveal on a dark stage: the arch draws itself → becomes the app icon →
  * a 3D-tilted phone plays real app screens → 3·2·1 countdown → "Coming soon" end card with store badges.
  * Screens come from real app screenshots (public/_preview/app-*.jpg, local only).
@@ -12,7 +12,7 @@ import { Arch, theme } from '../shared/brand';
 import { AppStoreBadge, GooglePlayBadge } from '../shared/storeBadges';
 import { AppIcon, PhoneMockup, phoneScreen } from '../shared/device';
 
-export const TEASER_FRAMES = 420;
+export const TEASER_FRAMES = 472;
 const easeOut = Easing.bezier(0.16, 1, 0.3, 1);
 const easeInOut = Easing.bezier(0.65, 0, 0.35, 1);
 const cl = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
@@ -24,15 +24,19 @@ const SCR = phoneScreen(PH_W, 0);
 const SCR_H = Math.round((SCR.w * 2796) / 1290);
 const PH_H = SCR_H + (PH_W - SCR.w);
 
-const SCREENS: { src: string; at: number; scroll: number }[] = [
-  { src: 'app-list.jpg', at: 0, scroll: 260 },
-  { src: 'app-offers.jpg', at: 56, scroll: 120 },
-  { src: 'app-where.jpg', at: 100, scroll: 0 },
+const SCREENS: { src: string; at: number; scroll: number; bar: string }[] = [
+  { src: 'app-home.jpg', at: 0, scroll: 120, bar: '#FFFFFF' },
+  { src: 'app-list.jpg', at: 40, scroll: 220, bar: '#FFFFFF' },
+  { src: 'app-offers.jpg', at: 80, scroll: 100, bar: '#FFFFFF' },
+  { src: 'app-carsheet.jpg', at: 120, scroll: 0, bar: '#E0E0E0' },
+  { src: 'app-cars.jpg', at: 160, scroll: 260, bar: '#FFFFFF' },
 ];
 const LINES: [number, number, string][] = [
-  [140, 196, 'Find your stay'],
-  [196, 240, 'Everything you need to know'],
-  [240, 284, 'Book now, pay when you arrive'],
+  [140, 170, 'Your whole trip, in one app'],
+  [170, 210, 'Find your stay'],
+  [210, 250, 'Book now, pay when you arrive'],
+  [250, 290, 'Your car, ready on arrival'],
+  [290, 336, 'Rent a car, delivered to you'],
 ];
 
 const Words: React.FC<{ text: string; f: number; at: number; size: number; weight?: number; color?: string }> = ({ text, f, at, size, weight = 300, color = '#fff' }) => (
@@ -52,7 +56,7 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
 
   /* glow + grain stage */
   const pulse = 0.85 + 0.15 * Math.sin(f / 12);
-  const glowY = interpolate(f, [0, 130, 150, 280, 300], [960, 860, 1150, 1150, 900], { easing: easeInOut, ...cl });
+  const glowY = interpolate(f, [0, 130, 150, 332, 352], [960, 860, 1150, 1150, 900], { easing: easeInOut, ...cl });
 
   /* A · arch draws */
   const draw = interpolate(f, [8, 52], [0, 1], { easing: easeInOut, ...cl });
@@ -64,14 +68,14 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
   const sweep = interpolate(f, [92, 116], [-1, 2], cl);
   /* C · phone */
   const phone = spring({ frame: f - 128, fps, config: { damping: 20, stiffness: 70 } });
-  const phoneOut = interpolate(f, [282, 300], [0, 1], { easing: easeInOut, ...cl });
-  const ry = interpolate(f, [128, 280], [-22, -6], cl) + 6 * phoneOut;
-  const rx = interpolate(f, [128, 280], [14, 6], cl);
+  const phoneOut = interpolate(f, [334, 352], [0, 1], { easing: easeInOut, ...cl });
+  const ry = interpolate(f, [128, 332], [-22, -6], cl) + 6 * phoneOut;
+  const rx = interpolate(f, [128, 332], [14, 6], cl);
   const local = f - 128;
   /* D · end card */
-  const end = spring({ frame: f - 352, fps, config: { damping: 14, stiffness: 110 } });
-  const endSweep = interpolate(f, [378, 402], [-1, 2], cl);
-  const fadeOut = interpolate(f, [410, 420], [1, 0], cl);
+  const end = spring({ frame: f - 404, fps, config: { damping: 14, stiffness: 110 } });
+  const endSweep = interpolate(f, [430, 454], [-1, 2], cl);
+  const fadeOut = interpolate(f, [462, 472], [1, 0], cl);
 
   return (
     <AbsoluteFill style={{ background: '#07070A', fontFamily: t.sans, color: '#fff', overflow: 'hidden', opacity: fadeOut }}>
@@ -108,7 +112,7 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
       )}
 
       {/* C · phone with real app screens */}
-      {f >= 126 && f < 304 && (
+      {f >= 126 && f < 356 && (
         <>
           <div style={{ position: 'absolute', left: 60, right: 60, top: 250, height: 200 }}>
             {LINES.map(([a, b, l]) => (
@@ -123,12 +127,12 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
               transform: `translateY(${(1 - phone) * 1300 + phoneOut * 1400}px) rotateY(${ry}deg) rotateX(${rx}deg) rotateZ(${(1 - phone) * 8}deg)`,
               transformStyle: 'preserve-3d',
             }}>
-              <PhoneMockup w={PH_W} h={PH_H} style={{ left: 0, top: 0 }}>
+              <PhoneMockup w={PH_W} h={PH_H} barBg={[...SCREENS].reverse().find((x) => local >= x.at + 7)?.bar ?? '#FFFFFF'} style={{ left: 0, top: 0 }}>
                 {SCREENS.map((s, i) => {
                   const next = SCREENS[i + 1];
                   const inK = i === 0 ? 1 : rv(local, s.at, 14);
                   const outK = next ? rv(local, next.at, 14) : 0;
-                  const sc = interpolate(local, [s.at, (next?.at ?? 160)], [0, s.scroll], { easing: easeInOut, ...cl });
+                  const sc = interpolate(local, [s.at, (next?.at ?? 210)], [0, s.scroll], { easing: easeInOut, ...cl });
                   return (
                     <div key={s.src} style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#fff', transform: `translateX(${(1 - inK) * SCR.w - outK * SCR.w * 0.3}px)`, boxShadow: i ? '-20px 0 40px rgba(0,0,0,0.15)' : undefined }}>
                       <Img src={`http://localhost:3000/public/_preview/${s.src}`} style={{ position: 'absolute', left: 0, top: -sc, width: SCR.w, height: SCR_H }} />
@@ -147,16 +151,16 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
       )}
 
       {/* E · countdown to launch */}
-      {f >= 294 && f < 358 && (
-        <div style={{ position: 'absolute', inset: 0, opacity: interpolate(f, [350, 358], [1, 0], cl) }}>
+      {f >= 346 && f < 410 && (
+        <div style={{ position: 'absolute', inset: 0, opacity: interpolate(f, [402, 410], [1, 0], cl) }}>
           <div style={{ position: 'absolute', left: 60, right: 60, top: 470 }}>
-            <Words text="The countdown to launch" f={f} at={296} size={64} weight={300} color="rgba(255,255,255,0.8)" />
+            <Words text="The countdown to launch" f={f} at={348} size={64} weight={300} color="rgba(255,255,255,0.8)" />
             <div style={{ height: 10 }} />
-            <Words text="has begun" f={f} at={304} size={96} weight={600} />
+            <Words text="has begun" f={f} at={356} size={96} weight={600} />
           </div>
           {[3, 2, 1].map((num, i) => {
-            const at = 316 + i * 13;
-            const on = f >= at && (i === 2 ? f < 358 : f < at + 13);
+            const at = 368 + i * 13;
+            const on = f >= at && (i === 2 ? f < 410 : f < at + 13);
             if (!on) return null;
             const k = spring({ frame: f - at, fps, config: { damping: 11, stiffness: 190 } });
             const ring = interpolate(f, [at, at + 13], [1, 0], cl);
@@ -175,7 +179,7 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
       )}
 
       {/* D · coming soon */}
-      {f >= 348 && (
+      {f >= 400 && (
         <div style={{ position: 'absolute', left: 0, right: 0, top: 470, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div style={{ position: 'relative', transform: `scale(${0.5 + 0.5 * end}) translateY(${(1 - end) * 120}px)`, opacity: Math.min(1, end * 1.4), borderRadius: 52, boxShadow: `0 40px 110px -16px ${t.primary}AA` }}>
             <AppIcon size={230} primary={t.primary} />
@@ -183,21 +187,21 @@ export const AppTeaser: React.FC<StudioProps> = (p) => {
               <div style={{ position: 'absolute', top: -60, bottom: -60, width: 90, left: endSweep * 230, background: 'linear-gradient(100deg, rgba(255,255,255,0), rgba(255,255,255,0.75), rgba(255,255,255,0))', transform: 'skewX(-18deg)' }} />
             </div>
           </div>
-          <div style={{ marginTop: 84, fontSize: 30, fontWeight: 500, letterSpacing: 12, textTransform: 'uppercase', color: t.primary, opacity: rv(f, 358, 14) }}>Stay tuned</div>
+          <div style={{ marginTop: 84, fontSize: 30, fontWeight: 500, letterSpacing: 12, textTransform: 'uppercase', color: t.primary, opacity: rv(f, 410, 14) }}>Stay tuned</div>
           <div style={{ marginTop: 18 }}>
-            <Words text="Coming soon" f={f} at={362} size={150} weight={600} />
+            <Words text="Coming soon" f={f} at={414} size={150} weight={600} />
           </div>
-          <div style={{ marginTop: 28, opacity: rv(f, 374, 16) }}>
-            <Words text="Your next stay, right in your pocket" f={f} at={374} size={40} weight={300} color="rgba(255,255,255,0.75)" />
+          <div style={{ marginTop: 28, opacity: rv(f, 426, 16) }}>
+            <Words text="Your whole trip, right in your pocket" f={f} at={426} size={40} weight={300} color="rgba(255,255,255,0.75)" />
           </div>
-          <div style={{ marginTop: 76, display: 'flex', gap: 20, opacity: rv(f, 382, 16), transform: `translateY(${(1 - rv(f, 382, 16)) * 30}px)` }}>
+          <div style={{ marginTop: 76, display: 'flex', gap: 20, opacity: rv(f, 434, 16), transform: `translateY(${(1 - rv(f, 434, 16)) * 30}px)` }}>
             <AppStoreBadge height={74} caption="Coming soon to the" />
             <GooglePlayBadge height={74} caption="COMING SOON ON" />
           </div>
         </div>
       )}
-      {f >= 348 && (
-        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 300, textAlign: 'center', fontSize: 34, letterSpacing: 0.4, opacity: rv(f, 390, 16) * 0.85 }}>
+      {f >= 400 && (
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 300, textAlign: 'center', fontSize: 34, letterSpacing: 0.4, opacity: rv(f, 442, 16) * 0.85 }}>
           <span style={{ fontWeight: 500 }}>{site}</span><span style={{ fontWeight: 300 }}>.com</span>
         </div>
       )}
