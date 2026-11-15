@@ -12,6 +12,10 @@ import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-ext-400.css';
 import '@fontsource/inter/latin-ext-500.css';
 import '@fontsource/poppins/latin-500.css';
+import '@fontsource/rubik/latin-400.css';
+import '@fontsource/rubik/latin-500.css';
+import '@fontsource/rubik/latin-ext-400.css';
+import '@fontsource/rubik/latin-ext-500.css';
 import '@fontsource/jetbrains-mono/latin-400.css';
 import '@fontsource/jetbrains-mono/latin-ext-400.css';
 import { continueRender, delayRender, getRemotionEnvironment } from 'remotion';
@@ -25,6 +29,8 @@ if (typeof document !== 'undefined' && getRemotionEnvironment().isRendering) {
     document.fonts.load('500 30px "Geist Sans"'),
     document.fonts.load('500 30px "Inter"'),
     document.fonts.load('500 40px "Poppins"'),
+    document.fonts.load('400 30px "Rubik"', 'Beşiktaş'),
+    document.fonts.load('500 30px "Rubik"', 'Beşiktaş'),
     document.fonts.load('400 30px "JetBrains Mono"', 'ŞIŞLI ISTANBUL'),
   ])
     .then(() => document.fonts.ready)

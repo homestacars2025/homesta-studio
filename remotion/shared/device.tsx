@@ -20,8 +20,8 @@ const btn = (side: 'l' | 'r', top: number, h: number): React.CSSProperties => ({
 });
 
 export const PhoneMockup: React.FC<{
-  w: number; h: number; ink?: string; screenBg?: string; style?: React.CSSProperties; children: React.ReactNode;
-}> = ({ w, h, ink = '#0E0E10', screenBg = '#FFFFFF', style, children }) => {
+  w: number; h: number; ink?: string; screenBg?: string; barBg?: string; style?: React.CSSProperties; children: React.ReactNode;
+}> = ({ w, h, ink = '#0E0E10', screenBg = '#FFFFFF', barBg, style, children }) => {
   const R = w * 0.165;                      // outer corner radius (iPhone proportion)
   const s = phoneScreen(w, h);
   return (
@@ -41,7 +41,7 @@ export const PhoneMockup: React.FC<{
           <div style={{ position: 'relative', width: s.w, height: s.h, borderRadius: R - PHONE_FRAME - PHONE_BEZEL, overflow: 'hidden', background: screenBg }}>
             {children}
             {/* status bar */}
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 78, background: screenBg }} />
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 78, background: barBg ?? screenBg }} />
             <div style={{ position: 'absolute', top: 27, left: s.w * 0.1, fontSize: 21, fontWeight: 600, color: ink, letterSpacing: -0.2 }}>9:41</div>
             <div style={{ position: 'absolute', top: 18, left: s.w / 2 - 70, width: 140, height: 40, borderRadius: 999, background: '#050506' }} />
             <div style={{ position: 'absolute', top: 30, right: s.w * 0.08, display: 'flex', gap: 7, alignItems: 'center' }}>

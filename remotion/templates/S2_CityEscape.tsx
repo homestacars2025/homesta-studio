@@ -1,14 +1,14 @@
 /**
- * S2 · City Escape v2  (story, 9:16 video, 12s @ 30fps) — "get the app" motivation story
- * Target: city. Data: city name + image(s) + 3–6 units (photos, name, type, specs, price) + brand.
- * The phone plays a real mini app journey: browse stays → tap one → photo gallery & details →
- * tap "Book now" → "Booked!". The headline rolls with it (Explore → Find → Book your stay in <City>),
- * the side photo follows the stay in focus, and the app icon bounces with a notification badge.
+ * S2 · City Escape v3  (story, 9:16 video, 12s @ 30fps) — "get the app" motivation story
+ * Target: city. Data: city name + image(s) + 3–6 units (photos, name, type, specs, price, amenities) + brand.
+ * The phone replays the REAL Homesta app (rebuilt 1:1 from app screenshots, Rubik UI font, the app's
+ * own 3D icons): results list → tap a stay → gallery swipe → scroll to "What this place offers" →
+ * tap "Reserve" → "Booked!". Headline rolls (Explore → Find → Book your stay in <City>).
  * Playfair italic only for the city name.
  */
 import React from 'react';
 import { AbsoluteFill, Audio, Easing, Img, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { ArrowLeft, Bath, BedDouble, Bookmark, Check, Heart, MapPin, Pointer, Search, SlidersHorizontal, Snowflake, Users, Utensils, Wifi } from 'lucide-react';
+import { ArrowUpDown, Bath, Bed, BedDouble, Check, ChevronLeft, ChevronRight, Heart, MapPin, Pointer, Share, SlidersHorizontal, Users } from 'lucide-react';
 import { asset } from '../shared/assets';
 import type { StudioProps, UnitProps } from '../shared/types';
 import { HorizontalLogo, theme } from '../shared/brand';
@@ -23,68 +23,95 @@ const easeInOut = Easing.bezier(0.65, 0, 0.35, 1);
 const cl = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
 const reveal = (f: number, start: number, dur = 20) => interpolate(f, [start, start + dur], [0, 1], { easing: easeOut, ...cl });
 
-/* ── phone geometry ── */
-const PH_W = 560;
-const PH_H = 1080;
+/* ── phone geometry (screen keeps the iPhone 430×932 ratio of the real screenshots) ── */
+const PH_W = 530;
+const SCR_W = phoneScreen(PH_W, 0).w;
+const REF_W = 1188; // screenshot reference width (all app measurements below are in these units)
+const K = SCR_W / REF_W;
+const d = (v: number) => v * K;
+const SCR_H = Math.round(d(2576));
+const PH_H = SCR_H + (PHONE_FRAME + PHONE_BEZEL) * 2;
 const PH_X = (1080 - PH_W) / 2;
-const PH_Y = 470;
-const SCR = phoneScreen(PH_W, PH_H);
-const SCR_W = SCR.w;
-const SCR_H = SCR.h;
+const PH_Y = 455;
 const IN = PHONE_FRAME + PHONE_BEZEL; // screen offset inside the phone
 
-/* ── list cards ── */
-const PAD = 22;
-const CARD_W = SCR_W - PAD * 2;
-const IMG_H = 280;
-const CARD_H = IMG_H + 132;
-const CARD_GAP = 22;
-const LIST_TOP = 318;
+/* ── app tokens ── */
+const APP_FONT = '"Rubik", "Geist Sans", sans-serif';
+const INK = '#222222';
+const GRAY = '#717171';
+const LINE = '#E8E8E8';
+const CARD_TOP = 580;
+const CARD_STEP = 1235;
+const HERO_H = 1090;
+const BAR_TOP = 2282;
+const DETAIL_SCROLL = 1270;
 
 /* ── story beats ── */
 const SCROLL_A = 46;
 const SCROLL_B = 116;
 const TAP1 = 128; // tap the stay card
 const PUSH = 134; // detail screen slides in
-const SWIPE = [176, 206]; // gallery swipes
-const TAP2 = 238; // tap "Book now"
-const SHEET = 244; // "Booked!" sheet
-const CHECK = 254;
-const BADGE = 264; // notification badge on the app icon
+const SWIPE = [156, 180]; // gallery swipes
+const DSCROLL = [198, 236]; // scroll down to the amenities
+const TAP2 = 262; // tap "Reserve"
+const SHEET = 268; // "Booked!" sheet
+const CHECK = 278;
+const BADGE = 288; // notification badge on the app icon
 
 const niceName = (s: string) => {
   const t = s === s.toUpperCase() ? s.toLowerCase().replace(/\b\p{L}/gu, (c) => c.toUpperCase()) : s;
   return t.length > 44 ? t.slice(0, 43).trimEnd() + '…' : t;
 };
-const row: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 5 };
-
-const UnitCard: React.FC<{ u: UnitProps; t: ReturnType<typeof theme>; saved: boolean; press: number }> = ({ u, t, saved, press }) => {
+const money = (v?: number | null) => (v ? `$${v.toFixed(2)}` : '');
+const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? '' : 's'}`;
+const specLine = (u: UnitProps) => {
   const s = u.specs ?? {};
+  return [s.bedrooms ? plural(Number(s.bedrooms), 'bedroom') : '', s.beds ? plural(Number(s.beds), 'bed') : '', s.baths ? plural(Number(s.baths), 'bathroom') : '']
+    .filter(Boolean).join(' • ');
+};
+
+/* the app's own 3D amenity icons, in the app's order */
+const AMENITIES: [string, string][] = [
+  ['wifi', 'Wi-Fi'], ['kitchen', 'Kitchen'], ['air_conditioning', 'Air conditioning'], ['tv', 'TV'],
+  ['washing_machine', 'Washing machine'], ['dishwasher', 'Dishwasher'], ['hair_dryer', 'Hair dryer'], ['iron', 'Iron'],
+  ['extra_bed', 'Extra bed'], ['hot_water', 'Hot water'], ['parking', 'Parking'], ['pool', 'Pool'], ['self_check_in', 'Self check-in'],
+];
+const icon3d = (b: StudioProps['brand'], key: string) => b?.icons?.[key] ?? asset(`app/${key}.png`);
+
+const Ico: React.FC<{ src: string; size: number; style?: React.CSSProperties }> = ({ src, size, style }) => (
+  <Img src={src} style={{ width: size, height: size, objectFit: 'contain', mixBlendMode: 'multiply', ...style }} />
+);
+const Circle: React.FC<{ x: number; y: number; r: number; bg: string; children: React.ReactNode; shadow?: boolean }> = ({ x, y, r, bg, children, shadow }) => (
+  <div style={{ position: 'absolute', left: d(x - r), top: d(y - r), width: d(r * 2), height: d(r * 2), borderRadius: 999, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: shadow ? '0 2px 8px rgba(0,0,0,0.12)' : undefined }}>
+    {children}
+  </div>
+);
+
+/** Result card — exactly the app's list card. */
+const ResultCard: React.FC<{ u: UnitProps; b: StudioProps['brand']; press: number }> = ({ u, b, press }) => {
+  const W = 1077;
+  const pay = u.pay_at_arrival;
   return (
-    <div style={{ width: CARD_W, height: CARD_H, borderRadius: 30, background: '#FFFFFF', border: '1.5px solid #EFEEEA', boxShadow: '0 12px 30px rgba(14,14,16,0.07)', overflow: 'hidden', transform: `scale(${1 - 0.03 * press})` }}>
-      <div style={{ position: 'relative', width: CARD_W, height: IMG_H }}>
+    <div style={{ position: 'relative', width: d(W), height: d(1145), borderRadius: d(50), background: '#fff', boxShadow: '0 2px 14px rgba(0,0,0,0.05)', transform: `scale(${1 - 0.03 * press})` }}>
+      <div style={{ position: 'absolute', left: d(22), top: d(20), width: d(W - 44), height: d(777), borderRadius: d(48), overflow: 'hidden', background: '#EEE' }}>
         <Img src={u.photos[0]?.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        <div style={{ position: 'absolute', top: 14, left: 14, height: 38, padding: '0 16px', borderRadius: 999, background: 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', fontSize: 20, fontWeight: 600, color: t.ink }}>
-          {u.type}
-        </div>
-        <div style={{ position: 'absolute', top: 12, right: 12, width: 46, height: 46, borderRadius: 999, background: saved ? t.primary : 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Bookmark size={22} color={saved ? '#fff' : t.ink} fill={saved ? '#fff' : 'none'} strokeWidth={2} />
+        <div style={{ position: 'absolute', bottom: d(30), left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: d(12) }}>
+          {[0, 1, 2, 3, 4, 5].map((i) => <div key={i} style={{ width: d(20), height: d(20), borderRadius: 99, background: '#fff', opacity: i === 0 ? 1 : 0.6 }} />)}
         </div>
       </div>
-      <div style={{ padding: '14px 18px 0' }}>
-        <div style={{ fontSize: 23, fontWeight: 600, lineHeight: 1.2, color: t.ink, height: 56, overflow: 'hidden' }}>{niceName(u.name || u.title)}</div>
-        <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 14, fontSize: 20, color: t.mute }}>
-          {s.guests ? <span style={row}><Users size={18} color={t.primary} />{s.guests}</span> : null}
-          {s.bedrooms ? <span style={row}><BedDouble size={18} color={t.primary} />{s.bedrooms}</span> : null}
-          {s.baths ? <span style={row}><Bath size={18} color={t.primary} />{s.baths}</span> : null}
-          <div style={{ flex: 1 }} />
-          {u.price_from_usd ? (
-            <span style={{ color: t.ink }}>
-              <b style={{ fontSize: 22 }}>${Math.round(u.price_from_usd)}</b> / night
-            </span>
-          ) : null}
-        </div>
+      <Circle x={980} y={95} r={46} bg="rgba(255,255,255,0.92)"><Heart size={d(44)} color={INK} strokeWidth={2} /></Circle>
+      <div style={{ position: 'absolute', left: d(45), right: d(45), top: d(832), fontSize: d(40), color: INK, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{u.name || u.title}</div>
+      <div style={{ position: 'absolute', left: d(45), top: d(902), fontSize: d(37), color: GRAY }}>{u.city}</div>
+      <div style={{ position: 'absolute', left: d(45), top: d(963), fontSize: d(37), color: GRAY }}>{specLine(u)}</div>
+      <div style={{ position: 'absolute', left: d(45), top: d(1036), fontSize: d(44), color: INK }}>
+        <span style={{ fontWeight: 500 }}>{money(u.price_from_usd)}</span> night
       </div>
+      {pay != null && (
+        <div style={{ position: 'absolute', right: d(45), top: d(1025), height: d(75), padding: `0 ${d(30)}px 0 ${d(24)}px`, borderRadius: 999, background: '#fff', boxShadow: '0 1px 6px rgba(0,0,0,0.08)', display: 'flex', alignItems: 'center', gap: d(14), fontSize: d(36), fontWeight: 500, color: pay ? '#C99200' : '#1F9D55' }}>
+          <Ico src={asset(pay ? 'app/tag-arrival.png' : 'app/tag-paid.png')} size={d(48)} />
+          {pay ? 'Pay on arrival' : 'Paid in full'}
+        </div>
+      )}
     </div>
   );
 };
@@ -144,7 +171,7 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
 
   /* ── list scroll → card D ── */
   const su = interpolate(f, [SCROLL_A, SCROLL_B], [0, D], { easing: easeInOut, ...cl });
-  const scroll = su * (CARD_H + CARD_GAP);
+  const scroll = su * CARD_STEP;
   const press1 = interpolate(f, [TAP1 - 3, TAP1, TAP1 + 5], [0, 1, 0], cl);
 
   /* ── screens ── */
@@ -154,14 +181,21 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
   const gal = (pick?.photos ?? []).slice(0, 3);
   const gi = interpolate(f, [SWIPE[0], SWIPE[0] + 14, SWIPE[1], SWIPE[1] + 14], [0, 1, 1, 2], { easing: easeInOut, ...cl });
   const gx = Math.min(gi, Math.max(0, gal.length - 1));
+  const ds = interpolate(f, DSCROLL, [0, DETAIL_SCROLL], { easing: easeInOut, ...cl });
+  const navOn = interpolate(ds, [620, 820], [0, 1], cl);
+  const toastIn = spring({ frame: f - PUSH - 22, fps, config: { damping: 15, stiffness: 140 } });
   const press2 = interpolate(f, [TAP2 - 3, TAP2, TAP2 + 5], [0, 1, 0], cl);
+  const lightBar = f >= PUSH + 4 && f < SHEET + 4 && navOn < 0.5;
 
-  /* ── finger (global coords) ── */
-  const cardY = PH_Y + IN + LIST_TOP + CARD_H / 2 - 30;
-  const btnX = PH_X + IN + SCR_W - 150;
-  const btnY = PH_Y + IN + SCR_H - 108;
-  const fx = interpolate(f, [100, TAP1 - 4, TAP1 + 30, TAP2 - 6], [720, 520, 520, btnX], { easing: easeInOut, ...cl });
-  const fy = interpolate(f, [100, TAP1 - 4, TAP1 + 30, TAP2 - 6], [1300, cardY, cardY + 220, btnY], { easing: easeInOut, ...cl });
+  /* ── finger (global coords; app points in screenshot units) ── */
+  const G = (x: number, y: number): [number, number] => [PH_X + IN + d(x), PH_Y + IN + d(y)];
+  const keys: [number, [number, number]][] = [
+    [100, [760, 1400]], [TAP1 - 4, G(560, CARD_TOP + 420)], [TAP1 + 8, G(560, CARD_TOP + 420)],
+    [SWIPE[0] - 2, G(930, 620)], [SWIPE[0] + 14, G(420, 640)], [SWIPE[1] - 2, G(930, 620)], [SWIPE[1] + 14, G(420, 640)],
+    [DSCROLL[0] - 2, G(760, 1950)], [DSCROLL[1], G(760, 950)], [DSCROLL[1] + 6, G(760, 950)], [TAP2 - 6, G(990, 2400)],
+  ];
+  const fx = interpolate(f, keys.map((k) => k[0]), keys.map((k) => k[1][0]), { easing: easeInOut, ...cl });
+  const fy = interpolate(f, keys.map((k) => k[0]), keys.map((k) => k[1][1]), { easing: easeInOut, ...cl });
   const fingerOn = interpolate(f, [100, 110, TAP2 + 10, TAP2 + 22], [0, 1, 1, 0], cl);
   const ring = (at: number) => {
     const k = (f - at) / 16;
@@ -169,7 +203,9 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
   };
   const r1 = ring(TAP1);
   const r2 = ring(TAP2);
-  const press = Math.max(press1, press2);
+  const inDrag = (from: number, to: number) => interpolate(f, [from - 2, from, to, to + 3], [0, 1, 1, 0], cl);
+  const drag = Math.max(inDrag(SWIPE[0], SWIPE[0] + 14), inDrag(SWIPE[1], SWIPE[1] + 14), inDrag(DSCROLL[0], DSCROLL[1]));
+  const press = Math.max(press1, press2, drag * 0.8);
 
   /* ── headline roll ── */
   let pi = 0;
@@ -246,138 +282,172 @@ export const S2_CityEscape: React.FC<StudioProps> = (p) => {
       <Prop src="brand/3d/paperclip.png" x={930} y={1280} w={110} rot={18}
         style={{ transform: `rotate(${18 + (1 - clipIn) * 30}deg) scale(${0.6 + 0.4 * clipIn})`, opacity: clipIn }} />
 
-      {/* phone */}
-      <PhoneMockup w={PH_W} h={PH_H} ink={t.ink} screenBg="#FFFFFF"
+      {/* phone — the real Homesta app */}
+      <PhoneMockup w={PH_W} h={PH_H} ink={lightBar ? '#FFFFFF' : '#0E0E10'} screenBg="#FFFFFF" barBg="transparent"
         style={{ left: PH_X, top: PH_Y, transform: `translateY(${(1 - phoneIn) * 900}px) rotate(${(1 - phoneIn) * 6}deg)` }}>
+        <div style={{ position: 'absolute', inset: 0, fontFamily: APP_FONT, color: INK }}>
 
-        {/* ── 1. home / list ── */}
-        <div style={{ position: 'absolute', inset: 0, transform: `translateX(${-push * SCR_W * 0.28}px)` }}>
-          <div style={{ position: 'absolute', left: 0, top: 0, width: SCR_W, transform: `translateY(${-scroll}px)` }}>
-            <div style={{ position: 'absolute', top: 96, left: PAD, right: PAD, display: 'flex', alignItems: 'center' }}>
-              <HorizontalLogo b={p.brand} height={30} logoReady={p.logoReady} />
-              <div style={{ flex: 1 }} />
-              <div style={{ width: 52, height: 52, borderRadius: 999, background: t.primary, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700 }}>
-                {city.slice(0, 1)}
-              </div>
+          {/* ── 1. results list ── */}
+          <div style={{ position: 'absolute', inset: 0, background: '#F7F7F7', transform: `translateX(${-push * SCR_W * 0.28}px)` }}>
+            <div style={{ position: 'absolute', left: d(55), top: 0, transform: `translateY(${-d(scroll)}px)` }}>
+              {units.map((x, i) => {
+                const e = spring({ frame: f - 30 - i * 5, fps, config: { damping: 18, stiffness: 120 } });
+                return (
+                  <div key={x.id} style={{ position: 'absolute', left: 0, top: d(CARD_TOP + i * CARD_STEP), transform: `translateY(${(1 - e) * 120}px)`, opacity: e }}>
+                    <ResultCard u={x} b={p.brand} press={i === D ? press1 : 0} />
+                  </div>
+                );
+              })}
             </div>
-            <div style={{ position: 'absolute', top: 172, left: PAD, right: PAD, height: 64, borderRadius: 999, background: '#F4F4F2', display: 'flex', alignItems: 'center', gap: 12, padding: '0 10px 0 22px', fontSize: 20, color: t.mute }}>
-              <Search size={22} color={t.ink} />
-              Stays in <b style={{ color: t.ink, fontWeight: 600 }}>{city}</b>
-              <div style={{ flex: 1 }} />
-              <div style={{ width: 46, height: 46, borderRadius: 999, background: t.ink, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <SlidersHorizontal size={20} color="#fff" />
-              </div>
-            </div>
-            <div style={{ position: 'absolute', top: 262, left: PAD, right: PAD, display: 'flex', alignItems: 'baseline' }}>
-              <span style={{ fontSize: 26, fontWeight: 700 }}>Top stays</span>
-              <div style={{ flex: 1 }} />
-              <span style={{ fontSize: 20, color: t.mute }}>{n} stays</span>
-            </div>
-            {units.map((x, i) => {
-              const e = spring({ frame: f - 30 - i * 5, fps, config: { damping: 18, stiffness: 120 } });
-              return (
-                <div key={x.id} style={{ position: 'absolute', left: PAD, top: LIST_TOP + i * (CARD_H + CARD_GAP), transform: `translateY(${(1 - e) * 120}px)`, opacity: e }}>
-                  <UnitCard u={x} t={t} saved={i < Math.floor(su + 0.2)} press={i === D ? press1 : 0} />
+            {/* header: back · search · categories */}
+            <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: d(542), background: '#fff', boxShadow: '0 4px 14px rgba(0,0,0,0.04)' }}>
+              <Circle x={108} y={277} r={52} bg="#F4F4F4"><ChevronLeft size={d(54)} color={INK} strokeWidth={2.2} /></Circle>
+              <div style={{ position: 'absolute', left: d(196), top: d(208), width: d(934), height: d(136), borderRadius: 999, border: `${d(3)}px solid #E9E9E9`, background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center' }}>
+                <Ico src={asset('app/search.png')} size={d(58)} style={{ marginLeft: d(50) }} />
+                <div style={{ marginLeft: d(26), lineHeight: 1.25 }}>
+                  <div style={{ fontSize: d(38), fontWeight: 500, color: INK }}>{city}</div>
+                  <div style={{ fontSize: d(32), color: GRAY }}>Any dates • 1 guest</div>
                 </div>
-              );
-            })}
-          </div>
-          <AbsoluteFill style={{ background: '#0E0E10', opacity: push * 0.25 }} />
-        </div>
-
-        {/* ── 2. stay details ── */}
-        {pick && f >= PUSH - 1 && (
-          <div style={{ position: 'absolute', inset: 0, background: '#fff', transform: `translateX(${(1 - push) * SCR_W}px)`, boxShadow: '-20px 0 40px rgba(0,0,0,0.12)' }}>
-            {/* gallery */}
-            <div style={{ position: 'absolute', top: 78, left: 0, width: SCR_W, height: 540, overflow: 'hidden' }}>
-              <div style={{ display: 'flex', width: SCR_W * Math.max(1, gal.length), height: '100%', transform: `translateX(${-gx * SCR_W}px)` }}>
-                {gal.map((g, i) => (
-                  <Img key={i} src={g.url} style={{ width: SCR_W, height: '100%', objectFit: 'cover', flexShrink: 0, transform: `scale(${1.04 + 0.04 * Math.sin((f + i * 20) / 40)})` }} />
-                ))}
+                <div style={{ flex: 1 }} />
+                <div style={{ width: d(2), height: d(70), background: '#E3E3E3' }} />
+                <ArrowUpDown size={d(50)} color={INK} strokeWidth={2.2} style={{ marginLeft: d(36) }} />
+                <SlidersHorizontal size={d(50)} color={INK} strokeWidth={2.2} style={{ marginLeft: d(38), marginRight: d(36), transform: 'rotate(90deg)' }} />
               </div>
-              <div style={{ position: 'absolute', top: 18, left: 18, width: 52, height: 52, borderRadius: 999, background: 'rgba(255,255,255,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ArrowLeft size={24} color={t.ink} />
-              </div>
-              <div style={{ position: 'absolute', top: 18, right: 18, width: 52, height: 52, borderRadius: 999, background: 'rgba(255,255,255,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Heart size={24} color={f > 160 ? t.primary : t.ink} fill={f > 160 ? t.primary : 'none'} style={{ transform: `scale(${1 + 0.3 * interpolate(f, [160, 166, 174], [0, 1, 0], cl)})` }} />
-              </div>
-              <div style={{ position: 'absolute', bottom: 44, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 8 }}>
-                {gal.map((_, i) => (
-                  <div key={i} style={{ width: Math.abs(gx - i) < 0.5 ? 26 : 9, height: 9, borderRadius: 9, background: '#fff', opacity: Math.abs(gx - i) < 0.5 ? 1 : 0.6 }} />
+              <div style={{ position: 'absolute', left: d(55), top: d(390), display: 'flex', gap: d(26), whiteSpace: 'nowrap' }}>
+                <div style={{ height: d(118), padding: `0 ${d(46)}px`, borderRadius: 999, border: `${d(5)}px solid ${t.primary}`, display: 'flex', alignItems: 'center', fontSize: d(38) }}>All</div>
+                {[['chip-apartment', 'Apartment'], ['chip-aparthotels', 'Aparthotels'], ['chip-hotels', 'Hotels']].map(([k, l]) => (
+                  <div key={k} style={{ height: d(112), marginTop: d(3), padding: `0 ${d(36)}px 0 ${d(32)}px`, borderRadius: 999, border: `${d(2.5)}px solid #E6E6E6`, display: 'flex', alignItems: 'center', gap: d(20), fontSize: d(38) }}>
+                    <Ico src={asset(`app/${k}.png`)} size={d(58)} />{l}
+                  </div>
                 ))}
               </div>
             </div>
-            {/* sheet */}
-            <div style={{ position: 'absolute', top: 586, left: 0, right: 0, bottom: 0, background: '#fff', borderRadius: '32px 32px 0 0', padding: '28px 26px 0' }}>
-              <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.18, letterSpacing: -0.4, height: 68, overflow: 'hidden' }}>{niceName(pick.name || pick.title)}</div>
-              <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 6, fontSize: 19, color: t.mute }}>
-                <MapPin size={18} color={t.primary} />
-                {[pick.district, pick.city].filter(Boolean).join(', ')}
-              </div>
-              <div style={{ marginTop: 18, display: 'flex', gap: 10 }}>
-                {[
-                  s.guests ? { i: <Users size={18} color={t.primary} />, l: `${s.guests} guests` } : null,
-                  s.bedrooms ? { i: <BedDouble size={18} color={t.primary} />, l: `${s.bedrooms} bedroom${Number(s.bedrooms) > 1 ? 's' : ''}` } : null,
-                  s.baths ? { i: <Bath size={18} color={t.primary} />, l: `${s.baths} bath${Number(s.baths) > 1 ? 's' : ''}` } : null,
-                ].filter(Boolean).map((c, i) => {
-                  const e = spring({ frame: f - PUSH - 10 - i * 4, fps, config: { damping: 16, stiffness: 160 } });
-                  return (
-                    <div key={i} style={{ height: 46, padding: '0 14px', borderRadius: 999, border: '1.5px solid #EFEEEA', display: 'flex', alignItems: 'center', gap: 7, fontSize: 18, fontWeight: 500, transform: `translateY(${(1 - e) * 20}px)`, opacity: e }}>
-                      {c!.i}{c!.l}
+            <AbsoluteFill style={{ background: '#0E0E10', opacity: push * 0.25 }} />
+          </div>
+
+          {/* ── 2. stay details ── */}
+          {pick && f >= PUSH - 1 && (
+            <div style={{ position: 'absolute', inset: 0, background: '#fff', transform: `translateX(${(1 - push) * SCR_W}px)`, boxShadow: '-20px 0 40px rgba(0,0,0,0.12)', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', left: 0, top: 0, width: SCR_W, transform: `translateY(${-d(ds)}px)` }}>
+                {/* gallery */}
+                <div style={{ position: 'relative', width: SCR_W, height: d(HERO_H + 40), overflow: 'hidden', background: '#DDD' }}>
+                  <div style={{ display: 'flex', width: SCR_W * Math.max(1, gal.length), height: '100%', transform: `translateX(${-gx * SCR_W}px)` }}>
+                    {gal.map((g, i) => (
+                      <Img key={i} src={g.url} style={{ width: SCR_W, height: '100%', objectFit: 'cover', flexShrink: 0, transform: `scale(${1.03 + 0.03 * Math.sin((f + i * 20) / 40)})` }} />
+                    ))}
+                  </div>
+                  <div style={{ position: 'absolute', left: d(990), top: d(992), height: d(66), padding: `0 ${d(26)}px`, borderRadius: 999, background: 'rgba(30,30,30,0.55)', color: '#fff', fontSize: d(34), display: 'flex', alignItems: 'center', transform: 'translateX(-30%)' }}>
+                    {Math.round(gx) + 1} / {pick.photo_count ?? gal.length}
+                  </div>
+                </div>
+                {/* sheet */}
+                <div style={{ position: 'relative', marginTop: d(-38), borderRadius: `${d(70)}px ${d(70)}px 0 0`, background: '#fff', padding: `${d(68)}px ${d(56)}px 0` }}>
+                  <div style={{ display: 'flex', gap: d(18) }}>
+                    {[pick.type].filter(Boolean).map((c) => (
+                      <div key={c} style={{ height: d(68), padding: `0 ${d(32)}px`, borderRadius: 999, border: `${d(2.5)}px solid #E2E2E2`, display: 'flex', alignItems: 'center', fontSize: d(34), color: '#333' }}>{c}</div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: d(30), fontSize: d(62), lineHeight: 1.26, color: '#1A1A1A', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{pick.name || pick.title}</div>
+                  <div style={{ marginTop: d(34), display: 'flex', alignItems: 'center', gap: d(16), fontSize: d(40), color: GRAY }}>
+                    <MapPin size={d(42)} color={GRAY} strokeWidth={1.8} />{pick.city}
+                  </div>
+                  <div style={{ marginTop: d(66), display: 'grid', gridTemplateColumns: `${d(539)}px 1fr`, rowGap: d(48), fontSize: d(42), color: '#333' }}>
+                    {[
+                      s.guests ? [<Users key="g" size={d(48)} color="#8A8A8A" strokeWidth={1.7} />, plural(Number(s.guests), 'guest')] : null,
+                      s.bedrooms ? [<BedDouble key="b" size={d(48)} color="#8A8A8A" strokeWidth={1.7} />, plural(Number(s.bedrooms), 'bedroom')] : null,
+                      s.beds ? [<Bed key="d" size={d(48)} color="#8A8A8A" strokeWidth={1.7} />, plural(Number(s.beds), 'bed')] : null,
+                      s.baths ? [<Bath key="t" size={d(48)} color="#8A8A8A" strokeWidth={1.7} />, plural(Number(s.baths), 'bathroom')] : null,
+                    ].filter(Boolean).map((c, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: d(26) }}>{c![0]}{c![1]}</div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: d(70), height: d(2), background: LINE }} />
+                  <div style={{ marginTop: d(64), display: 'flex', alignItems: 'center', gap: d(34) }}>
+                    <Img src={asset('app/host.png')} style={{ width: d(138), height: d(138), borderRadius: 999 }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: d(42), color: INK }}>Contact the host</div>
+                      <div style={{ marginTop: d(10), fontSize: d(33), color: GRAY }}>Ask about anything before you book</div>
                     </div>
-                  );
-                })}
-              </div>
-              <div style={{ marginTop: 18, display: 'flex', gap: 22, fontSize: 18, color: t.mute }}>
-                {pick.amenities?.includes('wifi') && <span style={row}><Wifi size={20} color={t.ink} /> Wi-Fi</span>}
-                {pick.amenities?.includes('air_conditioning') && <span style={row}><Snowflake size={20} color={t.ink} /> A/C</span>}
-                {pick.amenities?.includes('kitchen') && <span style={row}><Utensils size={20} color={t.ink} /> Kitchen</span>}
-              </div>
-            </div>
-            {/* booking bar */}
-            <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 150, borderTop: '1.5px solid #EFEEEA', background: '#fff', display: 'flex', alignItems: 'center', padding: '0 26px 26px' }}>
-              <div>
-                <div style={{ fontSize: 17, color: t.mute }}>From</div>
-                <div style={{ fontSize: 30, fontWeight: 700 }}>
-                  ${Math.round(pick.price_from_usd ?? 0)}<span style={{ fontSize: 18, fontWeight: 500, color: t.mute }}> / night</span>
+                    <div style={{ width: d(88), height: d(88), borderRadius: 999, background: '#FDE9ED', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <ChevronRight size={d(44)} color={t.primary} strokeWidth={2.4} />
+                    </div>
+                  </div>
+                  <div style={{ marginTop: d(70), height: d(2), background: LINE }} />
+                  <div style={{ marginTop: d(80), display: 'flex', alignItems: 'center', gap: d(26), fontSize: d(48), color: INK }}>
+                    <Ico src={asset('app/offers.png')} size={d(66)} />What this place offers
+                  </div>
+                  <div style={{ marginTop: d(46), display: 'grid', gridTemplateColumns: `${d(539)}px 1fr` }}>
+                    {AMENITIES.filter(([k]) => pick.amenities?.includes(k)).slice(0, 12).map(([k, l]) => (
+                      <div key={k} style={{ height: d(127), display: 'flex', alignItems: 'center', gap: d(30), fontSize: d(42), color: '#444' }}>
+                        <div style={{ width: d(80), display: 'flex', justifyContent: 'center' }}><Ico src={icon3d(p.brand, k)} size={d(78)} /></div>{l}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div style={{ flex: 1 }} />
-              <div style={{ height: 66, padding: '0 34px', borderRadius: 999, background: t.primary, color: '#fff', display: 'flex', alignItems: 'center', fontSize: 22, fontWeight: 700, transform: `scale(${1 - 0.06 * press2})`, boxShadow: `0 10px 24px -8px ${t.primary}` }}>
-                Book now
-              </div>
-            </div>
-          </div>
-        )}
 
-        {/* ── 3. booked ── */}
-        {pick && f >= SHEET - 1 && (
-          <div style={{ position: 'absolute', inset: 0, background: '#fff', transform: `translateY(${(1 - sheet) * SCR_H}px)`, borderRadius: '36px 36px 0 0', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 210 }}>
-            {/* confetti */}
-            {Array.from({ length: 18 }, (_, i) => {
-              const k = Math.max(0, f - CHECK) / 30;
-              const a = (i / 18) * Math.PI * 2;
-              const r = 40 + k * (150 + (i % 3) * 40);
-              return (
-                <div key={i} style={{ position: 'absolute', left: SCR_W / 2 + Math.cos(a) * r - 5, top: 290 + Math.sin(a) * r * 0.9 + k * k * 60, width: 10, height: i % 2 ? 10 : 16, borderRadius: 3, background: [t.primary, '#F5B83D', '#0E0E10'][i % 3], opacity: f > CHECK ? Math.max(0, 1 - k * 0.9) : 0, transform: `rotate(${a * 57 + k * 200}deg)` }} />
-              );
-            })}
-            <div style={{ width: 160, height: 160, borderRadius: 999, background: t.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${check})`, boxShadow: `0 20px 40px -12px ${t.primary}` }}>
-              <Check size={86} color="#fff" strokeWidth={3.2} />
-            </div>
-            <div style={{ marginTop: 40, fontSize: 52, fontWeight: 800, letterSpacing: -1.2, opacity: reveal(f, CHECK + 4, 14) }}>Booked!</div>
-            <div style={{ marginTop: 6, fontSize: 26, color: t.mute, opacity: reveal(f, CHECK + 8, 14) }}>
-              See you in <span style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, fontSize: 32, color: t.ink }}>{city}</span>
-            </div>
-            <div style={{ marginTop: 44, width: SCR_W - 60, display: 'flex', alignItems: 'center', gap: 16, padding: 14, borderRadius: 24, border: '1.5px solid #EFEEEA', opacity: reveal(f, CHECK + 12, 16), transform: `translateY(${(1 - reveal(f, CHECK + 12, 16)) * 20}px)` }}>
-              <Img src={pick.photos[0]?.url} style={{ width: 92, height: 92, borderRadius: 16, objectFit: 'cover' }} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 21, fontWeight: 600, lineHeight: 1.2, height: 50, overflow: 'hidden' }}>{niceName(pick.name || pick.title)}</div>
-                <div style={{ fontSize: 17, color: t.mute, marginTop: 4 }}>{pick.district || pick.city}</div>
+              {/* floating buttons on the photo → white top bar after scrolling */}
+              <div style={{ opacity: 1 - navOn }}>
+                <Circle x={99} y={235} r={55} bg="#fff"><ChevronLeft size={d(52)} color={INK} strokeWidth={2.2} /></Circle>
+                <Circle x={955} y={235} r={55} bg="#fff"><Share size={d(44)} color={INK} strokeWidth={2} /></Circle>
+                <Circle x={1088} y={235} r={55} bg="#fff"><Heart size={d(46)} color={INK} strokeWidth={2} /></Circle>
+              </div>
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: d(305), background: '#fff', borderBottom: `${d(2)}px solid ${LINE}`, opacity: navOn }}>
+                <ChevronLeft size={d(52)} color={INK} strokeWidth={2.2} style={{ position: 'absolute', left: d(73), top: d(209) }} />
+                <div style={{ position: 'absolute', left: d(190), right: d(300), top: d(208), fontSize: d(40), color: INK, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pick.name || pick.title}</div>
+                <Share size={d(44)} color={INK} strokeWidth={2} style={{ position: 'absolute', left: d(933), top: d(212) }} />
+                <Heart size={d(46)} color={INK} strokeWidth={2} style={{ position: 'absolute', left: d(1065), top: d(212) }} />
+              </div>
+
+              {/* pay-on-arrival toast */}
+              {pick.pay_at_arrival && (
+                <div style={{ position: 'absolute', left: d(218), top: d(2115), width: d(754), height: d(130), borderRadius: 999, background: '#fff', boxShadow: '0 8px 26px rgba(0,0,0,0.12)', display: 'flex', alignItems: 'center', gap: d(30), padding: `0 ${d(40)}px`, fontSize: d(39), lineHeight: 1.3, color: INK, opacity: toastIn, transform: `translateY(${(1 - toastIn) * 40}px) scale(${0.9 + 0.1 * toastIn})` }}>
+                  <Ico src={asset('app/tag-arrival.png')} size={d(72)} />
+                  <span>Book now, pay when you arrive</span>
+                </div>
+              )}
+
+              {/* reserve bar */}
+              <div style={{ position: 'absolute', left: 0, right: 0, top: d(BAR_TOP), bottom: 0, background: '#fff', borderTop: `${d(2)}px solid ${LINE}` }}>
+                <div style={{ position: 'absolute', left: d(56), top: d(58), fontSize: d(50), color: INK }}>
+                  <span style={{ fontWeight: 500 }}>{money(pick.price_from_usd)}</span><span style={{ fontSize: d(42), color: GRAY }}> / night</span>
+                </div>
+                {pick.min_nights ? <div style={{ position: 'absolute', left: d(56), top: d(128), fontSize: d(33), color: GRAY }}>Min {plural(pick.min_nights, 'night')}</div> : null}
+                <div style={{ position: 'absolute', left: d(855), top: d(36), width: d(277), height: d(152), borderRadius: d(44), background: t.primary, color: '#fff', fontSize: d(42), display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${1 - 0.06 * press2})` }}>
+                  Reserve
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* ── 3. booked ── */}
+          {pick && f >= SHEET - 1 && (
+            <div style={{ position: 'absolute', inset: 0, background: '#fff', transform: `translateY(${(1 - sheet) * SCR_H}px)`, borderRadius: '36px 36px 0 0', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 210 }}>
+              {Array.from({ length: 18 }, (_, i) => {
+                const k = Math.max(0, f - CHECK) / 30;
+                const a = (i / 18) * Math.PI * 2;
+                const r = 40 + k * (150 + (i % 3) * 40);
+                return (
+                  <div key={i} style={{ position: 'absolute', left: SCR_W / 2 + Math.cos(a) * r - 5, top: 290 + Math.sin(a) * r * 0.9 + k * k * 60, width: 10, height: i % 2 ? 10 : 16, borderRadius: 3, background: [t.primary, '#F5B83D', '#0E0E10'][i % 3], opacity: f > CHECK ? Math.max(0, 1 - k * 0.9) : 0, transform: `rotate(${a * 57 + k * 200}deg)` }} />
+                );
+              })}
+              <div style={{ width: 150, height: 150, borderRadius: 999, background: t.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${check})`, boxShadow: `0 20px 40px -12px ${t.primary}` }}>
+                <Check size={80} color="#fff" strokeWidth={3.2} />
+              </div>
+              <div style={{ marginTop: 38, fontSize: 48, fontWeight: 500, letterSpacing: -0.6, opacity: reveal(f, CHECK + 4, 14) }}>Booked!</div>
+              <div style={{ marginTop: 6, fontSize: 24, color: GRAY, opacity: reveal(f, CHECK + 8, 14) }}>
+                See you in <span style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, fontSize: 30, color: INK }}>{city}</span>
+              </div>
+              <div style={{ marginTop: 40, width: SCR_W - 56, display: 'flex', alignItems: 'center', gap: 16, padding: 14, borderRadius: 22, background: '#fff', boxShadow: '0 2px 14px rgba(0,0,0,0.07)', opacity: reveal(f, CHECK + 12, 16), transform: `translateY(${(1 - reveal(f, CHECK + 12, 16)) * 20}px)` }}>
+                <Img src={pick.photos[0]?.url} style={{ width: 86, height: 86, borderRadius: 16, objectFit: 'cover' }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 19, lineHeight: 1.25, height: 48, overflow: 'hidden' }}>{pick.name || pick.title}</div>
+                  <div style={{ fontSize: 16, color: GRAY, marginTop: 4 }}>{pick.city} · {money(pick.price_from_usd)} night</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </PhoneMockup>
 
       {/* finger */}
