@@ -13,19 +13,19 @@ const Frame: React.FC<{ h: number; w: number; children: React.ReactNode }> = ({ 
   }}>{children}</div>
 );
 
-export const AppStoreBadge: React.FC<{ height: number }> = ({ height: h }) => (
+export const AppStoreBadge: React.FC<{ height: number; caption?: string }> = ({ height: h, caption = 'Available on the' }) => (
   <Frame h={h} w={h * 2.98}>
     <svg width={h * 0.5} height={h * 0.5} viewBox="0 0 24 24" style={{ marginLeft: h * 0.24, marginRight: h * 0.16 }}>
       <path d={APPLE} fill="#fff" />
     </svg>
     <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-      <span style={{ fontSize: h * 0.2, fontWeight: 500, letterSpacing: 0.2 }}>Available on the</span>
+      <span style={{ fontSize: h * 0.2, fontWeight: 500, letterSpacing: 0.2 }}>{caption}</span>
       <span style={{ fontSize: h * 0.4, fontWeight: 600, letterSpacing: -0.5, marginTop: h * 0.04 }}>App Store</span>
     </div>
   </Frame>
 );
 
-export const GooglePlayBadge: React.FC<{ height: number }> = ({ height: h }) => (
+export const GooglePlayBadge: React.FC<{ height: number; caption?: string }> = ({ height: h, caption = 'GET IT ON' }) => (
   <Frame h={h} w={h * 3.36}>
     <svg width={h * 0.5} height={h * 0.54} viewBox="0 0 24 26" style={{ marginLeft: h * 0.24, marginRight: h * 0.18 }}>
       <defs>
@@ -40,7 +40,7 @@ export const GooglePlayBadge: React.FC<{ height: number }> = ({ height: h }) => 
       <path d="M1.5 25 L12.3 13 L16.6 16.4 Z" fill="url(#gp-r)" />
     </svg>
     <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-      <span style={{ fontSize: h * 0.19, fontWeight: 500, letterSpacing: 0.8 }}>GET IT ON</span>
+      <span style={{ fontSize: h * 0.19, fontWeight: 500, letterSpacing: 0.8 }}>{caption}</span>
       <span style={{ fontSize: h * 0.4, fontWeight: 500, letterSpacing: -0.4, marginTop: h * 0.04 }}>Google Play</span>
     </div>
   </Frame>

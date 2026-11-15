@@ -16,6 +16,7 @@ import { S4_InsideTheStay, S4_FRAMES } from './templates/S4_InsideTheStay';
 import sampleS4 from '../test/sample-s4.json';
 import { P2_StaysMap } from './templates/P2_StaysMap';
 import sample from '../test/sample-s3.json';
+import { AppTeaser, TEASER_FRAMES } from './oneoffs/AppTeaser';
 
 /**
  * Every template = one composition. The id must equal media.templates.composition_id with '_' replaced by '-'.
@@ -24,6 +25,7 @@ import sample from '../test/sample-s3.json';
  */
 export const Root: React.FC = () => (
   <>
+    <Composition id="X-AppTeaser" component={AppTeaser as React.FC<any>} durationInFrames={TEASER_FRAMES} fps={30} width={1080} height={1920} defaultProps={sampleS2 as unknown as StudioProps} />
     <Composition
       id="S3-FindYourStayIn"
       component={S3_FindYourStayIn as React.FC<any>}
