@@ -49,7 +49,7 @@ export const AppAd: React.FC<StudioProps> = (p) => {
       </div>
 
       {/* hook */}
-      <div style={{ position: 'absolute', top: 140, left: 0, right: 0, textAlign: 'center', color: '#15151A' }}>
+      <div style={{ position: 'absolute', top: 100, left: 0, right: 0, textAlign: 'center', color: '#15151A' }}>
         <div style={{ display: 'inline-block', transform: 'rotate(-3deg)', background: '#17171C', padding: '6px 26px 12px', borderRadius: 12, fontSize: 36, fontWeight: 500, boxShadow: '0 14px 30px -10px rgba(0,0,0,0.25)', color: '#fff' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 16 }}>مسافر لتركيا؟<TrFlag w={50} /></span>
         </div>
@@ -60,8 +60,15 @@ export const AppAd: React.FC<StudioProps> = (p) => {
         </div>
       </div>
 
+      {/* Libyan payment methods, small, between the hook and the phone */}
+      <div style={{ position: 'absolute', top: 432, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 26, direction: 'ltr' }}>
+        {([['moamalat', 50, 0], ['sadad', 42, 8], ['edfa3li', 42, 7], ['tadawul', 28, 0]] as [string, number, number][]).map(([k, h, r]) => (
+          <Img key={k} src={asset(`brand/3d/pay/${k}-flat.png`)} style={{ height: h, borderRadius: r }} />
+        ))}
+      </div>
+
       {/* phone */}
-      <div style={{ position: 'absolute', left: (1080 - 420) / 2, top: 470, filter: 'drop-shadow(0 40px 60px rgba(20,20,30,0.25))', direction: 'ltr' }}>
+      <div style={{ position: 'absolute', left: (1080 - 420) / 2, top: 502, filter: 'drop-shadow(0 40px 60px rgba(20,20,30,0.25))', direction: 'ltr' }}>
         <Phone3D w={420} screen={P('app-home-ar.jpg')} ry={0} rx={0} />
       </div>
 
