@@ -14,30 +14,22 @@ import { asset } from '../shared/assets';
 import type { StudioProps } from '../shared/types';
 import { HorizontalLogo, theme } from '../shared/brand';
 import { AppStoreBadge, GooglePlayBadge } from '../shared/storeBadges';
-import { PhoneMockup, phoneScreen } from '../shared/device';
-
-const PH_W = 372;
-const FR = 6;
-const BZ = 8;
-const SCR = phoneScreen(PH_W, 0, FR, BZ);
-const SCR_H = Math.round((SCR.w * 2796) / 1290);
-const PH_H = SCR_H + (FR + BZ) * 2;
-const PH_TOP = 476;
+import { Phone3D } from './Phone3D';
 
 const COPY = {
   en: {
     eyebrow: 'Stays · Transfers · Car rental',
     sub: 'The first app that brings your stay, your airport transfer and your rental car together — booked in minutes.',
-    tiles: [['cabin', 'Stays', 'Apartments & villas'], ['van', 'Transfers', 'Airport & city rides'], ['car', 'Car rental', 'Delivered to you']],
-    pay: 'Pay with the Libyan methods you already use',
+    tiles: [['cabin', 'Stays', 'Apartments, villas & hotels across Türkiye'], ['van', 'Airport transfers', 'A private ride from arrival to your door'], ['car', 'Car rental', 'Delivered wherever you are']],
+    pay: 'Pay with Libyan payment methods',
     screen: 'app-home.jpg',
     store: ['Available on the', 'GET IT ON'],
   },
   ar: {
     eyebrow: 'إقامة · نقل · إيجار سيارات',
     sub: 'أول تطبيق يجمع لك الإقامة والنقل من المطار وإيجار السيارات في مكان واحد',
-    tiles: [['cabin', 'الإقامة', 'شقق وفلل'], ['van', 'النقل', 'من المطار وداخل المدينة'], ['car', 'إيجار السيارات', 'توصلك أينما كنت']],
-    pay: 'ادفع بوسائل الدفع الليبية التي تستخدمها',
+    tiles: [['cabin', 'الإقامة', 'شقق وفلل وفنادق في كل تركيا'], ['van', 'النقل من المطار', 'توصيلة خاصة من الوصول لباب سكنك'], ['car', 'إيجار السيارات', 'سيارتك توصلك أينما كنت']],
+    pay: 'ادفع بوسائل الدفع الليبية',
     screen: 'app-home-ar.jpg',
     store: ['Available on the', 'GET IT ON'],
   },
@@ -53,29 +45,27 @@ export const AppPoster: React.FC<StudioProps> = (p) => {
   const c = COPY[lang];
   const ar = lang === 'ar';
   const font = ar ? '"Rubik", sans-serif' : t.sans;
-  const cx = 540;
-  const cy = PH_TOP + 330;
+  // phone sits on the reading-start side and turns toward the text
+  const phoneLeft = ar ? 600 : 80;
+  const colLeft = ar ? 70 : 540;
 
   return (
-    <AbsoluteFill style={{ background: '#FFFFFF', fontFamily: font, color: '#111114', direction: ar ? 'rtl' : 'ltr', overflow: 'hidden' }}>
-      {/* soft stage: brand glow + radar rings behind the phone */}
-      <div style={{ position: 'absolute', left: cx - 560, top: cy - 520, width: 1120, height: 1040, borderRadius: '50%', background: `radial-gradient(circle, ${t.primary}14 0%, ${t.primary}08 38%, rgba(255,255,255,0) 66%)` }} />
-      <svg width={1080} height={1350} style={{ position: 'absolute', inset: 0 }}>
-        {[260, 360, 460, 560].map((r, i) => (
-          <circle key={r} cx={cx} cy={cy} r={r} fill="none" stroke="#E9E6EA" strokeWidth={1.6} strokeDasharray={i % 2 ? '2 10' : undefined} />
-        ))}
-      </svg>
+    <AbsoluteFill style={{ fontFamily: font, color: '#111114', direction: ar ? 'rtl' : 'ltr', overflow: 'hidden',
+      background: `radial-gradient(ellipse 70% 55% at ${ar ? 72 : 28}% 66%, #FFFFFF 0%, #FBFAFB 45%, #F1F0F3 100%)` }}>
+      {/* key light + brand bounce behind the phone */}
+      <div style={{ position: 'absolute', left: phoneLeft - 260, top: 420, width: 900, height: 900, borderRadius: '50%', background: `radial-gradient(circle, ${t.primary}1A 0%, ${t.primary}08 40%, rgba(255,255,255,0) 68%)` }} />
+      <div style={{ position: 'absolute', left: ar ? 380 : -200, top: -200, width: 900, height: 1700, transform: `rotate(${ar ? -24 : 24}deg)`, background: 'linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.85) 50%, rgba(255,255,255,0))' }} />
 
       {/* header */}
       <div style={{ position: 'absolute', top: 56, left: 0, right: 0, display: 'flex', justifyContent: 'center', direction: 'ltr' }}>
         <HorizontalLogo b={p.brand} height={40} logoReady={p.logoReady} />
       </div>
-      <div style={{ position: 'absolute', top: 140, left: 60, right: 60, textAlign: 'center' }}>
+      <div style={{ position: 'absolute', top: 138, left: 60, right: 60, textAlign: 'center' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, height: 44, padding: '0 22px', borderRadius: 999, background: `${t.primary}10`, color: t.primary, fontSize: ar ? 22 : 17, fontWeight: 600, letterSpacing: ar ? 0 : 3.5, textTransform: 'uppercase' }}>
           <span style={{ width: 8, height: 8, borderRadius: 9, background: t.primary }} />{c.eyebrow}
         </div>
         {ar ? (
-          <div style={{ marginTop: 22, fontSize: 64, fontWeight: 700, lineHeight: 1.22, letterSpacing: 0 }}>
+          <div style={{ marginTop: 22, fontSize: 66, fontWeight: 700, lineHeight: 1.22 }}>
             رحلتك إلى <span style={{ color: t.primary }}>تركيا</span> كاملة<br />في تطبيق واحد
           </div>
         ) : (
@@ -83,51 +73,45 @@ export const AppPoster: React.FC<StudioProps> = (p) => {
             Your whole trip to <span style={{ fontFamily: t.display, fontStyle: 'italic', fontWeight: 700, color: t.primary, letterSpacing: -1 }}>Türkiye</span>,<br />in one app
           </div>
         )}
-        <div style={{ margin: '18px auto 0', maxWidth: ar ? 900 : 780, fontSize: ar ? 25 : 24, fontWeight: ar ? 400 : 300, lineHeight: 1.5, color: '#5E5E66' }}>{c.sub}</div>
+        <div style={{ margin: '18px auto 0', maxWidth: ar ? 900 : 800, fontSize: ar ? 25 : 24, fontWeight: ar ? 400 : 300, lineHeight: 1.5, color: '#5E5E66' }}>{c.sub}</div>
       </div>
 
-      {/* floating 3D icons */}
-      <Float src="brand/3d/app/suitcase.png" x={120} y={500} w={140} r={-8} />
-      <Float src="brand/3d/plane.png" x={790} y={470} w={200} r={-6} />
-      <Float src="brand/3d/map-pin.png" x={40} y={760} w={160} r={-8} />
-      <Float src="brand/3d/app/bell.png" x={832} y={720} w={180} r={6} />
-
-      {/* phone, fading into the tiles */}
-      <div style={{ position: 'absolute', left: (1080 - PH_W) / 2, top: PH_TOP, width: PH_W, height: 560, overflow: 'hidden', WebkitMaskImage: 'linear-gradient(180deg, #000 78%, transparent 100%)', maskImage: 'linear-gradient(180deg, #000 78%, transparent 100%)' }}>
-        <PhoneMockup w={PH_W} h={PH_H} frame={FR} bezel={BZ} style={{ left: 0, top: 0 }}>
-          <Img src={`http://localhost:3000/public/_preview/${c.screen}`} style={{ position: 'absolute', left: 0, top: 0, width: SCR.w, height: SCR_H }} />
-        </PhoneMockup>
-      </div>
-
-      {/* service tiles */}
-      <div style={{ position: 'absolute', top: 930, left: 60, right: 60, display: 'flex', gap: 18 }}>
-        {c.tiles.map(([icon, title, sub]) => (
-          <div key={icon} style={{ flex: 1, height: 150, borderRadius: 30, background: '#FFFFFF', border: '1.5px solid #EFEDEF', boxShadow: '0 18px 40px -18px rgba(20,20,30,0.22)', display: 'flex', alignItems: 'center', gap: 14, padding: '0 18px' }}>
-            <Img src={asset(`brand/3d/app/${icon}.png`)} style={{ width: 92, height: 92, objectFit: 'contain', flexShrink: 0 }} />
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: ar ? 27 : 27, fontWeight: ar ? 700 : 600, letterSpacing: ar ? 0 : -0.5 }}>{title}</div>
-              <div style={{ marginTop: 4, fontSize: ar ? 18 : 17, color: '#7A7A82', lineHeight: 1.3 }}>{sub}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Libyan payment methods */}
-      <div style={{ position: 'absolute', top: 1094, left: 60, right: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 22 }}>
-        <div style={{ fontSize: ar ? 22 : 19, fontWeight: 500, color: '#4A4A52', maxWidth: 330, lineHeight: 1.35, textAlign: ar ? 'right' : 'left' }}>{c.pay}</div>
-        <div style={{ display: 'flex', gap: 10, direction: 'ltr' }}>
-          {['moamalat', 'sadad', 'edfa3li', 'tadawul'].map((k) => (
-            <Img key={k} src={asset(`brand/3d/pay/${k}.png`)} style={{ width: 108, height: 108, objectFit: 'contain' }} />
-          ))}
+      {/* cinematic phone */}
+      <div style={{ position: 'absolute', left: phoneLeft + 40, top: 1250, width: 360, height: 60, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(20,20,30,0.30) 0%, rgba(20,20,30,0.10) 45%, rgba(20,20,30,0) 70%)', filter: 'blur(6px)' }} />
+      <div style={{ position: 'absolute', left: phoneLeft, top: 448, width: 400, height: 840, perspective: 2200, direction: 'ltr' }}>
+        <div style={{ position: 'absolute', left: 20, top: 6, filter: 'drop-shadow(30px 40px 40px rgba(20,20,30,0.22))', transformStyle: 'preserve-3d' }}>
+          <Phone3D w={380} screen={`http://localhost:3000/public/_preview/${c.screen}`} ry={ar ? -22 : 22} rx={3} rz={ar ? 2 : -2} />
         </div>
       </div>
 
-      {/* stores + site */}
-      <div style={{ position: 'absolute', top: 1226, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, direction: 'ltr' }}>
-        <AppStoreBadge height={64} caption={c.store[0]} />
-        <GooglePlayBadge height={64} caption={c.store[1]} />
-        <div style={{ width: 1.5, height: 44, background: '#E3E1E5', margin: '0 10px' }} />
-        <div style={{ fontSize: 26, letterSpacing: 0.2, fontFamily: t.sans }}>
+      {/* services */}
+      <div style={{ position: 'absolute', top: 480, left: colLeft, width: 470 }}>
+        {c.tiles.map(([icon, title, sub], i) => (
+          <div key={icon} style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '20px 0', borderBottom: i < 2 ? '1.5px solid #E7E5EA' : 'none' }}>
+            <div style={{ width: 104, height: 104, borderRadius: 28, background: '#FFFFFF', boxShadow: '0 14px 30px -14px rgba(20,20,30,0.28), inset 0 0 0 1px #EEECF0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Img src={asset(`brand/3d/app/${icon}.png`)} style={{ width: 80, height: 80, objectFit: 'contain' }} />
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 30, fontWeight: ar ? 700 : 600, letterSpacing: ar ? 0 : -0.6 }}>{title}</div>
+              <div style={{ marginTop: 6, fontSize: ar ? 20 : 19, color: '#6E6E76', lineHeight: 1.35 }}>{sub}</div>
+            </div>
+          </div>
+        ))}
+
+        {/* Libyan payment methods */}
+        <div style={{ marginTop: 34, fontSize: ar ? 22 : 18, fontWeight: 600, color: '#3E3E46', letterSpacing: ar ? 0 : 2.2, textTransform: 'uppercase' }}>{c.pay}</div>
+        <div style={{ marginTop: 10, display: 'flex', gap: 6, direction: 'ltr', justifyContent: ar ? 'flex-end' : 'flex-start', marginLeft: ar ? 0 : -8, marginRight: ar ? -8 : 0 }}>
+          {['moamalat', 'sadad', 'edfa3li', 'tadawul'].map((k) => (
+            <Img key={k} src={asset(`brand/3d/pay/${k}.png`)} style={{ width: 112, height: 112, objectFit: 'contain' }} />
+          ))}
+        </div>
+
+        {/* stores + site */}
+        <div style={{ marginTop: 26, display: 'flex', gap: 12, direction: 'ltr', justifyContent: ar ? 'flex-end' : 'flex-start' }}>
+          <AppStoreBadge height={62} caption={c.store[0]} />
+          <GooglePlayBadge height={62} caption={c.store[1]} />
+        </div>
+        <div style={{ marginTop: 18, fontSize: 26, letterSpacing: 0.2, fontFamily: t.sans, direction: 'ltr', textAlign: ar ? 'right' : 'left' }}>
           <span style={{ fontWeight: 600 }}>homestastay</span><span style={{ fontWeight: 300 }}>.com</span>
         </div>
       </div>
