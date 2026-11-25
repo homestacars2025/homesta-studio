@@ -18,6 +18,15 @@ const dots = (op: number): React.CSSProperties => ({
   backgroundImage: `radial-gradient(rgba(229,40,81,${op}) 1.7px, transparent 2px)`, backgroundSize: '15px 15px',
 });
 
+const TrFlag: React.FC<{ w: number }> = ({ w }) => (
+  <svg width={w} height={(w * 2) / 3} viewBox="0 0 1200 800" style={{ borderRadius: w * 0.12, boxShadow: '0 0 0 2px rgba(255,255,255,0.9)', flexShrink: 0 }}>
+    <rect width="1200" height="800" fill="#E30A17" />
+    <circle cx="425" cy="400" r="200" fill="#fff" />
+    <circle cx="475" cy="400" r="160" fill="#E30A17" />
+    <polygon points="483.3,400.0 552.4,377.5 552.4,304.9 595.1,363.7 664.2,341.2 621.5,400.0 664.2,458.8 595.1,436.3 552.4,495.1 552.4,422.5" fill="#fff" />
+  </svg>
+);
+
 export const AppAd: React.FC<StudioProps> = (p) => {
   const t = theme(p.brand);
   const red = t.primary;
@@ -38,7 +47,7 @@ export const AppAd: React.FC<StudioProps> = (p) => {
       {/* hook */}
       <div style={{ position: 'absolute', top: 140, left: 0, right: 0, textAlign: 'center', color: '#15151A' }}>
         <div style={{ display: 'inline-block', transform: 'rotate(-3deg)', background: '#17171C', padding: '6px 26px 12px', borderRadius: 12, fontSize: 36, fontWeight: 500, boxShadow: '0 14px 30px -10px rgba(0,0,0,0.25)', color: '#fff' }}>
-          مسافر لتركيا؟
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 16 }}>مسافر لتركيا؟<TrFlag w={50} /></span>
         </div>
         <div style={{ marginTop: 22, fontSize: 112, fontWeight: 600, lineHeight: 1.12, color: red, letterSpacing: -1 }}>ادفع بالدينار الليبي</div>
         <div style={{ marginTop: 14, fontSize: 38, fontWeight: 400, color: '#2A2A30', display: 'inline-flex', alignItems: 'center', gap: 12 }}>
