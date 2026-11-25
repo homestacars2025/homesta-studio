@@ -38,11 +38,11 @@ export const AppAd: React.FC<StudioProps> = (p) => {
       {/* hook */}
       <div style={{ position: 'absolute', top: 140, left: 0, right: 0, textAlign: 'center', color: '#15151A' }}>
         <div style={{ display: 'inline-block', transform: 'rotate(-3deg)', background: '#17171C', padding: '6px 26px 12px', borderRadius: 12, fontSize: 36, fontWeight: 500, boxShadow: '0 14px 30px -10px rgba(0,0,0,0.25)', color: '#fff' }}>
-          من ليبيا إلى تركيا
+          مسافر لتركيا؟
         </div>
-        <div style={{ marginTop: 6, fontSize: 136, fontWeight: 600, lineHeight: 1.1, color: red, letterSpacing: -1 }}>بضغطة زر</div>
+        <div style={{ marginTop: 22, fontSize: 112, fontWeight: 600, lineHeight: 1.12, color: red, letterSpacing: -1 }}>ادفع بالدينار الليبي</div>
         <div style={{ marginTop: 14, fontSize: 38, fontWeight: 400, color: '#2A2A30', display: 'inline-flex', alignItems: 'center', gap: 12 }}>
-          إقامتك، نقلك وسيارتك في
+          واحجز سكنك وسيارتك وتوصيلك من
           <span style={{ background: red, color: '#fff', borderRadius: 10, padding: '0 14px 5px', fontWeight: 600 }}>تطبيق واحد</span>
         </div>
       </div>
