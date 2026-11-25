@@ -49,8 +49,8 @@ export const AppAd: React.FC<StudioProps> = (p) => {
         <div style={{ display: 'inline-block', transform: 'rotate(-3deg)', background: '#17171C', padding: '6px 26px 12px', borderRadius: 12, fontSize: 36, fontWeight: 500, boxShadow: '0 14px 30px -10px rgba(0,0,0,0.25)', color: '#fff' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 16 }}>مسافر لتركيا؟<TrFlag w={50} /></span>
         </div>
-        <div style={{ marginTop: 22, fontSize: 112, fontWeight: 600, lineHeight: 1.12, color: red, letterSpacing: -1 }}>ادفع بالدينار الليبي</div>
-        <div style={{ marginTop: 14, fontSize: 38, fontWeight: 400, color: '#2A2A30', display: 'inline-flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ marginTop: 22, fontSize: 112, fontWeight: 600, lineHeight: 1.0, color: red, letterSpacing: -1 }}>ادفع بالدينار الليبي</div>
+        <div style={{ marginTop: 40, fontSize: 38, fontWeight: 400, color: '#2A2A30', display: 'inline-flex', alignItems: 'center', gap: 12 }}>
           واحجز سكنك وسيارتك وتوصيلك من
           <span style={{ background: red, color: '#fff', borderRadius: 10, padding: '0 14px 5px', fontWeight: 600 }}>تطبيق واحد</span>
         </div>
@@ -77,20 +77,20 @@ export const AppAd: React.FC<StudioProps> = (p) => {
           <div style={{ marginTop: 4, fontSize: 17, color: '#6B6F78' }}>سائق خاص بانتظارك عند الوصول</div>
         </div>
       </div>
-      <Img src={asset('brand/3d/app/van-bags.png')} style={{ position: 'absolute', left: 196, top: 492, width: 186, transform: 'rotate(4deg)', filter: 'drop-shadow(0 18px 18px rgba(20,20,30,0.22))' }} />
+      <Img src={asset('brand/3d/app/van-bags.png')} style={{ position: 'absolute', left: 16, top: 486, width: 176, transform: 'rotate(-4deg)', filter: 'drop-shadow(0 18px 18px rgba(20,20,30,0.22))' }} />
 
       {/* card: stay */}
       <div style={{ position: 'absolute', left: 744, top: 540, width: 290, transform: 'rotate(5deg)', background: '#FFF4F6', borderRadius: 30, padding: 12, border: '1.5px solid #F7DDE3', boxShadow: '0 30px 60px -20px rgba(20,20,30,0.28)' }}>
         <Img src={P('duplex.jpg')} style={{ width: '100%', height: 178, objectFit: 'cover', borderRadius: 22 }} />
         <div style={{ padding: '14px 8px 6px' }}>
-          <div style={{ fontSize: 22, fontWeight: 600, color: '#15151A', lineHeight: 1.3 }}>دوبلكس بإطلالة على البوسفور</div>
+          <div style={{ fontSize: 22, fontWeight: 600, color: '#15151A', lineHeight: 1.3, textWrap: 'balance' as any }}>دوبلكس بإطلالة على البوسفور</div>
           <div style={{ marginTop: 4, fontSize: 17, color: '#6B6F78' }}>بشكتاش، إسطنبول</div>
           <div style={{ marginTop: 10, fontSize: 30, fontWeight: 600, color: '#15151A', direction: 'rtl' }}>
             <span style={{ direction: 'ltr', unicodeBidi: 'isolate' }}>$201</span><span style={{ fontSize: 18, fontWeight: 400, color: '#6B6F78' }}> / الليلة</span>
           </div>
         </div>
       </div>
-      <Img src={asset('brand/3d/app/car.png')} style={{ position: 'absolute', left: 880, top: 448, width: 176, transform: 'rotate(-6deg)', filter: 'drop-shadow(0 18px 18px rgba(20,20,30,0.22))' }} />
+      <Img src={asset('brand/3d/app/car.png')} style={{ position: 'absolute', left: 916, top: 452, width: 150, transform: 'rotate(-6deg)', filter: 'drop-shadow(0 18px 18px rgba(20,20,30,0.22))' }} />
 
       {/* guest on the sofa, in front of the phone */}
       <Img src={P('sofa-man.png')} style={{ position: 'absolute', left: -70, bottom: -40, width: 1220 }} />
