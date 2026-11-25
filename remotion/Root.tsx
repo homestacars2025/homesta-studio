@@ -28,6 +28,7 @@ import { AppAd } from './oneoffs/AppAd';
 export const Root: React.FC = () => (
   <>
     <Still id="X-AppAd" component={AppAd as React.FC<any>} width={1080} height={1350} defaultProps={sampleS2 as unknown as StudioProps} />
+    <Still id="X-AppAd-Story" component={AppAd as React.FC<any>} width={1080} height={1920} defaultProps={sampleS2 as unknown as StudioProps} />
     <Still id="X-AppPoster" component={AppPoster as React.FC<any>} width={1080} height={1350} defaultProps={sampleS2 as unknown as StudioProps} />
     <Composition id="X-AppTeaser" component={AppTeaser as React.FC<any>} durationInFrames={TEASER_FRAMES} fps={30} width={1080} height={1920} defaultProps={sampleS2 as unknown as StudioProps} />
     <Composition

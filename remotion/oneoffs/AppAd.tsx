@@ -3,7 +3,7 @@
  * real home screen, floating app cards (transfer route, stay), a guest on a sofa in front.
  */
 import React from 'react';
-import { AbsoluteFill, Img } from 'remotion';
+import { AbsoluteFill, Img, useVideoConfig } from 'remotion';
 import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
 import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
 import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
@@ -30,8 +30,12 @@ const TrFlag: React.FC<{ w: number }> = ({ w }) => (
 export const AppAd: React.FC<StudioProps> = (p) => {
   const t = theme(p.brand);
   const red = t.primary;
+  const { height } = useVideoConfig();
+  const story = height > 1500; // 1080×1920: keep the 1350 layout inside Meta's story safe zone
+  const Y = story ? 290 : 0;
   return (
     <AbsoluteFill style={{ fontFamily: '"IBM Plex Sans Arabic", sans-serif', direction: 'rtl', overflow: 'hidden', background: '#FFFFFF' }}>
+      <div style={{ position: 'absolute', left: 0, top: Y, width: 1080, height: 1350 }}>
       {/* soft shapes + halftone */}
       <div style={{ position: 'absolute', left: -320, top: 520, width: 900, height: 900, borderRadius: '50%', background: 'rgba(229,40,81,0.045)' }} />
       <div style={{ position: 'absolute', left: 760, top: -260, width: 700, height: 700, borderRadius: '50%', background: 'rgba(229,40,81,0.05)' }} />
@@ -92,8 +96,9 @@ export const AppAd: React.FC<StudioProps> = (p) => {
       </div>
       <Img src={asset('brand/3d/app/car.png')} style={{ position: 'absolute', left: 916, top: 452, width: 150, transform: 'rotate(-6deg)', filter: 'drop-shadow(0 18px 18px rgba(20,20,30,0.22))' }} />
 
+      </div>
       {/* guest on the sofa, in front of the phone */}
-      <Img src={P('sofa-man.png')} style={{ position: 'absolute', left: -70, bottom: -40, width: 1220 }} />
+      <Img src={P('sofa-man.png')} style={{ position: 'absolute', left: story ? -240 : -70, bottom: -40, width: story ? 1560 : 1220 }} />
     </AbsoluteFill>
   );
 };
