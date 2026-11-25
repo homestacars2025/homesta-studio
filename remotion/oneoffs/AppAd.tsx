@@ -4,9 +4,9 @@
  */
 import React from 'react';
 import { AbsoluteFill, Img } from 'remotion';
-import '@fontsource/rubik/arabic-400.css';
-import '@fontsource/rubik/arabic-500.css';
-import '@fontsource/rubik/arabic-700.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
+import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
 import { asset } from '../shared/assets';
 import type { StudioProps } from '../shared/types';
 import { theme } from '../shared/brand';
@@ -22,7 +22,7 @@ export const AppAd: React.FC<StudioProps> = (p) => {
   const t = theme(p.brand);
   const red = t.primary;
   return (
-    <AbsoluteFill style={{ fontFamily: '"Rubik", sans-serif', direction: 'rtl', overflow: 'hidden', background: '#FFFFFF' }}>
+    <AbsoluteFill style={{ fontFamily: '"IBM Plex Sans Arabic", sans-serif', direction: 'rtl', overflow: 'hidden', background: '#FFFFFF' }}>
       {/* soft shapes + halftone */}
       <div style={{ position: 'absolute', left: -320, top: 520, width: 900, height: 900, borderRadius: '50%', background: 'rgba(229,40,81,0.045)' }} />
       <div style={{ position: 'absolute', left: 760, top: -260, width: 700, height: 700, borderRadius: '50%', background: 'rgba(229,40,81,0.05)' }} />
@@ -40,10 +40,10 @@ export const AppAd: React.FC<StudioProps> = (p) => {
         <div style={{ display: 'inline-block', transform: 'rotate(-3deg)', background: '#17171C', padding: '6px 26px 12px', borderRadius: 12, fontSize: 36, fontWeight: 500, boxShadow: '0 14px 30px -10px rgba(0,0,0,0.25)', color: '#fff' }}>
           من ليبيا إلى تركيا
         </div>
-        <div style={{ marginTop: 6, fontSize: 132, fontWeight: 700, lineHeight: 1.1, color: red }}>بضغطة زر</div>
+        <div style={{ marginTop: 6, fontSize: 136, fontWeight: 600, lineHeight: 1.1, color: red, letterSpacing: -1 }}>بضغطة زر</div>
         <div style={{ marginTop: 14, fontSize: 38, fontWeight: 400, color: '#2A2A30', display: 'inline-flex', alignItems: 'center', gap: 12 }}>
           إقامتك، نقلك وسيارتك في
-          <span style={{ background: red, color: '#fff', borderRadius: 10, padding: '0 14px 5px', fontWeight: 700 }}>تطبيق واحد</span>
+          <span style={{ background: red, color: '#fff', borderRadius: 10, padding: '0 14px 5px', fontWeight: 600 }}>تطبيق واحد</span>
         </div>
       </div>
 
@@ -64,7 +64,7 @@ export const AppAd: React.FC<StudioProps> = (p) => {
           </svg>
         </div>
         <div style={{ padding: '14px 8px 6px', direction: 'rtl' }}>
-          <div style={{ fontSize: 23, fontWeight: 700, color: '#15151A' }}>من المطار لباب سكنك</div>
+          <div style={{ fontSize: 23, fontWeight: 600, color: '#15151A' }}>من المطار لباب سكنك</div>
           <div style={{ marginTop: 4, fontSize: 17, color: '#6B6F78' }}>سائق خاص بانتظارك عند الوصول</div>
         </div>
       </div>
@@ -74,9 +74,9 @@ export const AppAd: React.FC<StudioProps> = (p) => {
       <div style={{ position: 'absolute', left: 744, top: 540, width: 290, transform: 'rotate(5deg)', background: '#FFF4F6', borderRadius: 30, padding: 12, border: '1.5px solid #F7DDE3', boxShadow: '0 30px 60px -20px rgba(20,20,30,0.28)' }}>
         <Img src={P('duplex.jpg')} style={{ width: '100%', height: 178, objectFit: 'cover', borderRadius: 22 }} />
         <div style={{ padding: '14px 8px 6px' }}>
-          <div style={{ fontSize: 22, fontWeight: 700, color: '#15151A', lineHeight: 1.3 }}>دوبلكس بإطلالة على البوسفور</div>
+          <div style={{ fontSize: 22, fontWeight: 600, color: '#15151A', lineHeight: 1.3 }}>دوبلكس بإطلالة على البوسفور</div>
           <div style={{ marginTop: 4, fontSize: 17, color: '#6B6F78' }}>بشكتاش، إسطنبول</div>
-          <div style={{ marginTop: 10, fontSize: 30, fontWeight: 700, color: '#15151A', direction: 'rtl' }}>
+          <div style={{ marginTop: 10, fontSize: 30, fontWeight: 600, color: '#15151A', direction: 'rtl' }}>
             <span style={{ direction: 'ltr', unicodeBidi: 'isolate' }}>$201</span><span style={{ fontSize: 18, fontWeight: 400, color: '#6B6F78' }}> / الليلة</span>
           </div>
         </div>
