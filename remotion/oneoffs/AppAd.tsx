@@ -36,14 +36,14 @@ export const AppAd: React.FC<StudioProps> = (p) => {
       </div>
 
       {/* hook */}
-      <div style={{ position: 'absolute', top: 126, left: 0, right: 0, textAlign: 'center', color: '#15151A' }}>
-        <div style={{ display: 'inline-block', transform: 'rotate(-3deg)', background: '#17171C', padding: '8px 30px 14px', borderRadius: 12, fontSize: 46, fontWeight: 500, boxShadow: '0 14px 30px -10px rgba(0,0,0,0.25)', color: '#fff' }}>
+      <div style={{ position: 'absolute', top: 140, left: 0, right: 0, textAlign: 'center', color: '#15151A' }}>
+        <div style={{ display: 'inline-block', transform: 'rotate(-3deg)', background: '#17171C', padding: '6px 26px 12px', borderRadius: 12, fontSize: 36, fontWeight: 500, boxShadow: '0 14px 30px -10px rgba(0,0,0,0.25)', color: '#fff' }}>
           من ليبيا إلى تركيا
         </div>
-        <div style={{ marginTop: -6, fontSize: 168, fontWeight: 700, lineHeight: 1.05, color: red }}>بضغطة زر.</div>
-        <div style={{ marginTop: 10, fontSize: 46, fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ marginTop: 6, fontSize: 132, fontWeight: 700, lineHeight: 1.1, color: red }}>بضغطة زر</div>
+        <div style={{ marginTop: 14, fontSize: 38, fontWeight: 400, color: '#2A2A30', display: 'inline-flex', alignItems: 'center', gap: 12 }}>
           إقامتك، نقلك وسيارتك في
-          <span style={{ background: red, color: '#fff', borderRadius: 12, padding: '0 16px 6px', fontWeight: 700 }}>تطبيق واحد</span>
+          <span style={{ background: red, color: '#fff', borderRadius: 10, padding: '0 14px 5px', fontWeight: 700 }}>تطبيق واحد</span>
         </div>
       </div>
 
